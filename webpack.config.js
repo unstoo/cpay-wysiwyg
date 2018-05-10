@@ -31,7 +31,7 @@ const path = require('path');
     plugins: [
       new CleanWebpackPlugin(['dist']),
       new HtmlWebpackPlugin({
-        title: 'Hot Module Replacement',
+        title: 'R+Quill',
         template: 'index.html'
       }),
      new webpack.NamedModulesPlugin(),

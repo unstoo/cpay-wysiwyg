@@ -1,5 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700&subset=latin-ext,vietnamese');
+
+
 body {
-    background: #fefefe;
+    font-family: 'Nunito Sans', -apple-system,BlinkMacSystemFont,“Segoe UI”,Helvetica,Arial,sans-serif,“Apple Color Emoji”,“Segoe UI Emoji”,“Segoe UI Symbol”;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #333333;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    text-align: left;
 }
 
 .ql-editor {
@@ -8,3 +18,4 @@ body {
     border: 1px solid silver;
     background: white;
 }
+
