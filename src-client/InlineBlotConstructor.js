@@ -2,7 +2,7 @@ import React from 'react'
 import Quill from 'quill'
 let Inline = Quill.import('blots/inline')
 
-const InlineBlotConstructor = ({ blotName, tagName }) => {
+const InlineBlotConstructor = ({ blotName, tagName, formatName }) => {
     
     class aBlot extends Inline { }
     aBlot.blotName = blotName
@@ -10,8 +10,15 @@ const InlineBlotConstructor = ({ blotName, tagName }) => {
     aBlot.className = `ql-cpay-${blotName || 'noclass'}`
     Quill.register(aBlot)
 
-    return <button onClick={() => { 
-        window.quill.format(blotName, true) }}>
+    return <button onClick={() => {      
+        
+        if (!(quill.getFormat())[formatName]) {
+            quill.format(formatName, true);
+        } else {
+            const range = quill.getSelection()
+            quill.formatText(range.index, range.length, formatName, false)
+        }
+    }}>
         {blotName}
     </button>
 

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --hotOnly --open",
-    "test": "test"
+    "test": "test",
+    "build": "webpack"
   },
   "author": "Yevgeny Kozlov",
   "license": "ISC",

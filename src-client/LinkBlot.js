@@ -6,8 +6,8 @@ const LinkBlot = ({ blotName, tagName }) => {
     
     class aBlot extends Inline {
         static create(value) {
-          let node = super.create();
-          // Sanitize url value if desired
+          let node = super.create()
+
           node.setAttribute('href', value)
           // Okay to set other non-format related attributes
           // These are invisible to Parchment so must be static
@@ -26,12 +26,13 @@ const LinkBlot = ({ blotName, tagName }) => {
       aBlot.blotName = 'link'
       aBlot.tagName = 'a'
       aBlot.className = `ql-cpay-link`
-      Quill.register(LinkBlot)
+      Quill.register(aBlot)
 
     return <button onClick={() => { 
-        let value = prompt('Enter link URL')
+        let href = prompt('Enter link URL')
         // красивый tooltip при добавлении и на ховер
-        window.quill.format('link', value)}}>
+        // вызов тултипа. если линк предоставлен, то quill.format('link', value = href)
+        quill.format('link', href)}}>
         A
     </button>
 
