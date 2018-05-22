@@ -10,13 +10,16 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
             let node = super.create()
             node.setAttribute('alt', value.alt)
             node.setAttribute('src', value.url)
+            node.setAttribute('style',
+             'width: ' + (value.style || 100) + '%')
             return node
           }
         
           static value(node) {
             return {
               alt: node.getAttribute('alt'),
-              url: node.getAttribute('src')
+              url: node.getAttribute('src'),
+              style: node.getAttribute('style')
             }
           }
      }
@@ -27,6 +30,9 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
 
     return <button onClick={() => {
 
+        let width = prompt('Enter image width in %')
+        console.log(width);
+        
         // Взять картинку:
         // 1 линк
         // 2 локальную: загрузить в облако, подставить линк.
@@ -34,7 +40,8 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
 
         quill.insertEmbed(range.index, 'image', {
             alt: 'Quill Cloud',
-            url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg'
+            url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
+            style: width
         }, Quill.sources.USER);
 
         // quill.setSelection(range.index + 1, Quill.sources.SILENT);
