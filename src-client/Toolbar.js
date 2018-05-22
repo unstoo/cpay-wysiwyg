@@ -5,6 +5,9 @@ import LinkBlot from './LinkBlot'
 import ImageBlot from './ImageBlot'
 import ClearFormat from './ClearFormat';
 import EmbedBlotConstructor from './EmbedBlot'
+import StyleBlot from './StyleBlot'
+import Align from './Align'
+import List from './List'
 
 
 
@@ -18,8 +21,12 @@ const Toolbar = () => {
         <BlockBlotConstructor blotName={'h2'} tagName={'h2'} formatName={'h2'} />
         <BlockBlotConstructor blotName={'h3'} tagName={'h3'} formatName={'h3'} />
         <EmbedBlotConstructor/>
+
         <ImageBlot />
         <ClearFormat />
+        <StyleBlot formatName="size" optionsList={['small', 'normal', 'large', 'huge']}/>
+        <Align formatName="align" optionsList={['left', 'center', 'right']}/>
+        <List />
     </div>
 }
 

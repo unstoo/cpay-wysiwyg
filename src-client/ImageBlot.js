@@ -30,16 +30,14 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
         // Взять картинку:
         // 1 линк
         // 2 локальную: загрузить в облако, подставить линк.
-        
         let range = quill.getSelection(true);
-        quill.insertText(range.index, '\n', Quill.sources.USER);
 
-        quill.insertEmbed(range.index + 1, 'image', {
+        quill.insertEmbed(range.index, 'image', {
             alt: 'Quill Cloud',
-            url: 'https://quilljs.com/0.20/assets/images/cloud.png'
+            url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg'
         }, Quill.sources.USER);
 
-        quill.setSelection(range.index + 2, Quill.sources.SILENT);
+        // quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
      }}>
         {'IMG'}

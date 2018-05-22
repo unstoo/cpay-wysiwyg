@@ -10,23 +10,23 @@ const path = require('path');
     devtool: 'inline-source-map',
     devServer: {
       contentBase: './dist',
-     hot: true,
-     port: 3300,
-     host: '0.0.0.0'
+      hot: true,
+      port: 3300,
+      host: '0.0.0.0'
     },
     mode: 'development',
     module: {
-        rules: [ 
-            {
-                exclude: /node_modules|packages/,
-                test: /\.js$/,
-                use: 'babel-loader',
-            },
-            {
-                 test: /\.css$/,
-                 use: ['style-loader', 'css-loader']
-            }
-        ]
+      rules: [ 
+        {
+            exclude: /node_modules|packages/,
+            test: /\.js$/,
+            use: 'babel-loader',
+        },
+        {
+              test: /\.css$/,
+              use: ['style-loader', 'css-loader']
+        }
+      ]
     },
     plugins: [
       new CleanWebpackPlugin(['dist']),

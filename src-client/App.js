@@ -10,14 +10,14 @@ const quillInit = () => {
     window.quill = new Quill('#editor')
 
     
-    // Снимать  блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <blockquote>.
+    // Снимать  блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <blockquote>, <ul>.
     document.getElementById('editor').addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
             const cursorPosition = (quill.getSelection()).index
             
-            const isItBlockquote = (quill.getFormat()).blockquote
+            const activeFormats = (quill.getFormat())
 
-            if (!isItBlockquote) {
+            if (!(activeFormats.blockquote || activeFormats.list)) {
                 Object.keys(quill.removeFormat(cursorPosition))
             }
             

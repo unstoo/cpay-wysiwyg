@@ -11,8 +11,9 @@ const InlineBlotConstructor = ({ blotName, tagName, formatName }) => {
     Quill.register(aBlot)
 
     return <button onClick={() => {      
+        const appliedFormats = quill.getFormat()
         
-        if (!(quill.getFormat())[formatName]) {
+        if (!appliedFormats.formatName) {
             quill.format(formatName, true);
         } else {
             const range = quill.getSelection()
