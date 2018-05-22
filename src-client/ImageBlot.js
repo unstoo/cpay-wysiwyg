@@ -10,8 +10,7 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
             let node = super.create()
             node.setAttribute('alt', value.alt)
             node.setAttribute('src', value.url)
-            node.setAttribute('style',
-             'width: ' + (value.style || 100) + '%')
+            node.setAttribute('style', value.style)
             return node
           }
         
@@ -23,6 +22,7 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
             }
           }
      }
+     
     aBlot.blotName =    'image'
     aBlot.tagName =     'img'
     aBlot.className =   `ql-cpay-${blotName || 'img'}`
@@ -41,7 +41,7 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
         quill.insertEmbed(range.index, 'image', {
             alt: 'Quill Cloud',
             url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
-            style: width
+            style: ['width: ' + (width || 100) + '%', 'margin: 0 auto'].join(';')
         }, Quill.sources.USER);
 
         // quill.setSelection(range.index + 1, Quill.sources.SILENT);

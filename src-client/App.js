@@ -47,6 +47,8 @@ const quillInit = () => {
         } else if (source == 'user') {
           console.log("USER::Seclection-change", selectedDelta)
           
+
+          // Ресайз картинки, которая уже вставленна в документ
           const ifImage = selectedDeltaIsImage(selectedDelta)
           if (ifImage) {
             let newWidth = window.prompt('Enter image width in %')

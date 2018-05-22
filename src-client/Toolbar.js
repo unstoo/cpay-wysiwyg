@@ -8,6 +8,7 @@ import EmbedBlotConstructor from './EmbedBlot'
 import StyleBlot from './StyleBlot'
 import Align from './Align'
 import List from './List'
+import VideoBlot from './VideoBlot'
 
 
 
@@ -27,6 +28,7 @@ const Toolbar = () => {
         <StyleBlot formatName="size" optionsList={['small', 'normal', 'large', 'huge']}/>
         <Align formatName="align" optionsList={['left', 'center', 'right']}/>
         <List />
+        <VideoBlot />
     </div>
 }
 
