@@ -70,7 +70,6 @@ const ImageBlot = () => {
                 attrs.style[name] = value
                 
                 let composedStyle = ''
-
                
                 composedStyle += `width: ${attrs.style.width}%;`
                 
