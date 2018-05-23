@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700&subset=latin-ext,vietnamese');
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Nunito Sans', -apple-system,BlinkMacSystemFont,“Segoe UI”,Helvetica,Arial,sans-serif,“Apple Color Emoji”,“Segoe UI Emoji”,“Segoe UI Symbol”;
@@ -23,8 +26,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    align-items: flex-start;
     justify-content: space-between;
-
 }
 
 .ql-editor p {
@@ -40,10 +43,6 @@ select {
     margin: 0 5px;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
 img {
     display: inline;
     border-radius: 4px;
@@ -52,6 +51,8 @@ img {
 iframe {
     width: 80%;
     height: 250px;
+    margin: 0 auto;
+    border-radius: 4px;
 }
 
 @media (max-width: 420px) {
@@ -60,7 +61,3 @@ iframe {
         height: 160px;
     }
 }
-
-
-
-

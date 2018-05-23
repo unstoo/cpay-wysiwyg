@@ -1,79 +1,91 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
 import { setConfig } from 'react-hot-loader'
-import Quill from 'quill'
 import Toolbar from './Toolbar'
 setConfig({ logLevel: 'debug' })
 
 
+const modalRoot = document.getElementById('modal-root');
 
-const quillInit = () => { 
-    window.Quill = Quill
-    window.quill = new Quill('#editor')
-    window.Delta = Quill.import('delta')
-    
-    // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <blockquote>, <ul>.
-    document.getElementById('editor').addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-            const cursorPosition = (quill.getSelection()).index
-            
-            const activeFormats = (quill.getFormat())
-
-            if (!(activeFormats.blockquote || activeFormats.list)) {
-                Object.keys(quill.removeFormat(cursorPosition))
-            }
-            
-        }
-    })
-
-    window.quill.on('text-change', function(delta, oldDelta, source) {
-        console.log(JSON.stringify(delta.ops, null, 2), source)
-        if (source == 'api') {
-          console.log("An API call triggered this change.");
-        } else if (source == 'user') {
-          console.log("A user action triggered this change.");
-        }
-    })
+class Modal extends React.Component {
+    constructor(props) {
+      super(props);
+      this.el = document.createElement('div');
+    }
+  
+    componentDidMount() {
+      modalRoot.appendChild(this.el);
+    }
+  
+    componentWillUnmount() {
+      modalRoot.removeChild(this.el);
+    }
+  
+    render() {
+      return ReactDOM.createPortal(
+        this.props.children,
+        this.el,
+      );
+    }
+  }
 
 
-    window.quill.on('selection-change', function(range, oldRange, source) {
-        const selectedDelta = quill.getContents(range.index, range.length)
-        console.log(selectedDelta);
+
+
+const Tooltip = (props) => {
+    console.log(props)
+    return <input type="number" onChange={(e) => {
+        console.log(e.target.value);
+        props.parentListener(e.target.value)
         
-        if (selectedDelta.ops.length === 0) return
+    }}/>
+}
 
-        if (source == 'api') {
-          console.log("API::Selection-change.", selectedDelta)
-        } else if (source == 'user') {
-          console.log("USER::Seclection-change", selectedDelta)
-          
+class App extends React.Component { 
+    constructor(props) {
+        super(props)
+        this.state = {selectedBlot: null}
+        this.updateBlotFormat = this.updateBlotFormat.bind(this)
+    }
 
-          // Ресайз картинки, которая уже вставленна в документ
-          const ifImage = selectedDeltaIsImage(selectedDelta)
-          if (ifImage) {
-            let newWidth = window.prompt('Enter image width in %')
+    updateBlotFormat(value) {
 
-            quill.updateContents(
-                new Delta()
-                .retain(range.index)
-                .delete(1)
-                .insert({ image: { url: ifImage.url, alt: ifImage.alt, style: newWidth }})
-            )
-          } 
+        if (this.state.selectedBlot) {
+            console.log('format()')
+            this.state.selectedBlot.format('style', ['width: ' + (value || 100) + '%', 'margin: 0 auto'].join(';'))
         }
-    })
-}
+    }
 
-const selectedDeltaIsImage = (deltaChunk) => {
-    return deltaChunk.ops[0].insert.image
-}
+    render() {
+        return <div className='container'>
+            <Toolbar />
+            <div id="editor" onClick={e => {
+    
+                //check if the target have to invoke a corresponding tooltip
+                if (e.target.dataset.tooltip) {
+                    const aBlot = Quill.find(e.target)
+                    console.log('Found blot with a tooltip.', aBlot);
+                    
+                    this.setState({selectedBlot: aBlot}) 
+                    // invoke a tooltip, 
+                    // const width = prompt('enter new image width in %')
+                    // theBlot.format() accordingly to the tooltip input.
+                    // Dismount on tooltip closure.      
 
-const App = () => {     
-    console.log(Quill.imports)
-    quillInit()
-    return <div className='container'>
-        <Toolbar />     
-    </div>
+                } else {
+                    // no => stop
+                    console.log('no tooltip');
+                }
+            }}></div>
+
+            <Modal>
+                <Tooltip 
+                    parentListener={this.updateBlotFormat} 
+                    tooltipTerminator={new Function()} />
+            </Modal>
+        </div>
+    }
 }
 
 export default hot(module)(App)

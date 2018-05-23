@@ -11,18 +11,33 @@ const ImageBlot = ({ blotName, tagName, formatName }) => {
             node.setAttribute('alt', value.alt)
             node.setAttribute('src', value.url)
             node.setAttribute('style', value.style)
+            node.setAttribute('data-tooltip', 'image')
+            node.setAttribute('data-id', '1')
             return node
           }
         
           static value(node) {
+              console.log('value(node)')
+              console.log(node);
+              
             return {
               alt: node.getAttribute('alt'),
               url: node.getAttribute('src'),
               style: node.getAttribute('style')
             }
           }
+
+          format(name, value) {
+              if (name && value) {
+                  this.domNode.setAttribute(name, value)
+              }
+
+              if (name && value === false) {
+                  this.domNode.removeAttribute(name)
+              }
+          }
      }
-     
+
     aBlot.blotName =    'image'
     aBlot.tagName =     'img'
     aBlot.className =   `ql-cpay-${blotName || 'img'}`
