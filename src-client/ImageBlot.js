@@ -73,7 +73,6 @@ const ImageBlot = () => {
                
                 composedStyle += `width: ${attrs.style.width}%;`
                 
-                
                 const margin = enum_margins[ attrs.style.margin.toUpperCase() ]
                 composedStyle += `margin: ${margin};`
                 

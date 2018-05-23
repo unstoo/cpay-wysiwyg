@@ -103,12 +103,36 @@ class App extends React.Component {
                         parentListener={this.updateBlotFormat('alt')} type={'text'}
                         currentValue={this.state.selectedBlot.getFormat('alt')}
                         tooltipTerminator={new Function()} />
+                    <MarginButton
+                        parentListener={this.updateBlotFormat('margin')}
+                        position={'LEFT'}>
+                        {'Left'}
+                    </MarginButton>
+                    <MarginButton
+                        parentListener={this.updateBlotFormat('margin')}
+                        position={'CENTER'}>
+                        {'Center'}
+                    </MarginButton>
+                    <MarginButton
+                        parentListener={this.updateBlotFormat('margin')}
+                        position={'RIGHT'}>
+                        {'Right'}
+                    </MarginButton>
                 </Modal>) 
                 :'no tooltip'
             }
             
         </div>
     }
+}
+
+const MarginButton = (props) => {
+    return <button
+    onClick={e => {
+        props.parentListener(props.position)
+    }}>
+        { props.children }
+    </button>
 }
 
 export default hot(module)(App)
