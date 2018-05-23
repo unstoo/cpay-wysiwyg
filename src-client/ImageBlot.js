@@ -2,70 +2,134 @@ import React from 'react'
 import Quill from 'quill'
 let Embed = Quill.import('blots/block/embed')
 
-const ImageBlot = ({ blotName, tagName, formatName }) => {
+const ImageBlot = () => {
     
-    class aBlot extends Embed {
+    class __imageBlot extends Embed {
+
+        static enum_margins = {
+            LEFT: '0 auto 0 0',
+            RIGHT: '0 0 0 auto',
+            CENTER: '0 auto'
+        }
 
         static create(value) {
             let node = super.create()
-            node.setAttribute('alt', value.alt)
-            node.setAttribute('src', value.url)
-            node.setAttribute('style', value.style)
+            let attr = {}
             node.setAttribute('data-tooltip', 'image')
-            node.setAttribute('data-id', '1')
+            attr.alt = value.alt
+            node.setAttribute('alt', value.alt)
+            attr.src = value.url
+            node.setAttribute('src', value.url)
+
+            if (!value.style) return node
+
+            attr.style = {}
+            // Parse style attribute
+            let composedStyle = ''
+            
+            if (value.style.width) {
+                attr.style.width = value.style.width
+                composedStyle += `width: ${value.style.width}%;`
+            }
+            
+            if (value.style.margin) {
+                attr.style.margin = value.style.margin
+                const margin = this.enum_margins[ value.style.margin.toUpperCase() ]
+                composedStyle += `margin: ${margin};`
+            }
+
+            node.setAttribute('style', composedStyle)
+            node.setAttribute('data-attrs', JSON.stringify(attr))            
+            
             return node
           }
         
           static value(node) {
-              console.log('value(node)')
-              console.log(node);
-              
-            return {
-              alt: node.getAttribute('alt'),
-              url: node.getAttribute('src'),
-              style: node.getAttribute('style')
-            }
+            return JSON.parse(node.getAttribute('data-attrs'))
           }
 
           format(name, value) {
-              if (name && value) {
-                  this.domNode.setAttribute(name, value)
-              }
+            // update required attribute
 
-              if (name && value === false) {
-                  this.domNode.removeAttribute(name)
-              }
+            const allowedStyleProps = ['width', 'margin']
+            const otherAllowedAttrs = ['alt', 'src']
+            const enum_margins = {
+                LEFT: '0 auto 0 0',
+                RIGHT: '0 0 0 auto',
+                CENTER: '0 auto'
+            }
+
+            let attrs = JSON.parse(this.domNode.getAttribute('data-attrs')) 
+
+            if (otherAllowedAttrs.includes(name)) {
+                attrs[name] = value
+                this.domNode.setAttribute(name, value)
+            }
+
+            if (allowedStyleProps.includes(name)) {
+                attrs.style[name] = value
+                
+                let composedStyle = ''
+
+               
+                composedStyle += `width: ${attrs.style.width}%;`
+                
+                
+                const margin = enum_margins[ attrs.style.margin.toUpperCase() ]
+                composedStyle += `margin: ${margin};`
+                
+                
+                this.domNode.setAttribute('style', composedStyle)
+            } 
+            
+            
+
+            this.domNode.setAttribute('data-attrs', JSON.stringify(attrs))
+          }
+
+        getFormat(name) {
+            const allowedAttrs = ['width', 'margin', 'alt', 'src']
+            let attrs = this.domNode.getAttribute('data-attrs')
+            attrs = JSON.parse(attrs)
+              
+            if (allowedAttrs.includes(name) === -1) return undefined
+            if (attrs[name]) return attrs[name]
+            if (attrs.style[name]) return attrs.style[name]
+
+            return undefined
           }
      }
 
-    aBlot.blotName =    'image'
-    aBlot.tagName =     'img'
-    aBlot.className =   `ql-cpay-${blotName || 'img'}`
-    Quill.register(aBlot)
+     __imageBlot.blotName =    'image'
+     __imageBlot.tagName =     'img'
+     __imageBlot.className =   `ql-cpay-img`
+    Quill.register(__imageBlot)
 
     return <button onClick={() => {
 
         let width = prompt('Enter image width in %')
-        console.log(width);
         
         // Взять картинку:
         // 1 линк
         // 2 локальную: загрузить в облако, подставить линк.
+
         let range = quill.getSelection(true);
 
         quill.insertEmbed(range.index, 'image', {
             alt: 'Quill Cloud',
             url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
-            style: ['width: ' + (width || 100) + '%', 'margin: 0 auto'].join(';')
+            style: {
+                width,
+                margin: 'right'
+            }
         }, Quill.sources.USER);
 
         // quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
      }}>
-        {'IMG'}
+        {'Image'}
     </button>
-
 }
 
-
 export default ImageBlot
+

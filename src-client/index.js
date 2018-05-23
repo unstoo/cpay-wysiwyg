@@ -50,18 +50,18 @@ const quillInit = () => {
         
   
         // Ресайз картинки, которая уже вставленна в документ
-        const ifImage = selectedDeltaIsImage(selectedDelta)
-        if (ifImage) {
-          // Модалка
-          let newWidth = window.prompt('Enter image width in %')
+        // const ifImage = selectedDeltaIsImage(selectedDelta)
+        // if (ifImage) {
+        //   // Модалка
+        //   let newWidth = window.prompt('Enter image width in %')
   
-          quill.updateContents(
-              new Delta()
-              .retain(range.index)
-              .delete(1)
-              .insert({ image: { url: ifImage.url, alt: ifImage.alt, style: 'width: ' + newWidth + '%' }})
-          )
-        } 
+        //   quill.updateContents(
+        //       new Delta()
+        //       .retain(range.index)
+        //       .delete(1)
+        //       .insert({ image: { url: ifImage.url, alt: ifImage.alt, style: 'width: ' + newWidth + '%' }})
+        //   )
+        // } 
       }
   })
 

@@ -34,56 +34,79 @@ class Modal extends React.Component {
 
 
 const Tooltip = (props) => {
-    console.log(props)
-    return <input type="number" onChange={(e) => {
-        console.log(e.target.value);
-        props.parentListener(e.target.value)
-        
+    //debug
+    console.log('---> debug: <Tooltip> props');
+    console.log(props);
+    
+    //^debug
+    
+    return <input 
+        type={props.type || 'number' } 
+        value={ props.currentValue || '' }
+        onChange={(e) => {
+            console.log(e.target.value);
+            props.parentListener(e.target.value)
+
+            //close tooltip => props.tooltipTerminator()
+            
     }}/>
 }
 
 class App extends React.Component { 
     constructor(props) {
         super(props)
-        this.state = {selectedBlot: null}
+
+        this.state = {
+            selectedBlot: null
+        }
+
         this.updateBlotFormat = this.updateBlotFormat.bind(this)
+        this.lookForBlotsWithTooltip = this.lookForBlotsWithTooltip.bind(this)
+        this.tooltipTerminator = this.tooltipTerminator.bind(this)
     }
 
-    updateBlotFormat(value) {
+    lookForBlotsWithTooltip(e) {
+         //check if the target have to invoke a corresponding tooltip
+         if (e.target.dataset.tooltip) {
+            const aBlot = Quill.find(e.target)
+            this.setState({selectedBlot: aBlot}) 
+        }
+    }
 
-        if (this.state.selectedBlot) {
-            console.log('format()')
-            this.state.selectedBlot.format('style', ['width: ' + (value || 100) + '%', 'margin: 0 auto'].join(';'))
+    tooltipTerminator() {
+        this.setState({ selectedBlot: null })
+    }
+
+    updateBlotFormat(name) {
+        return (value) => {
+            if (this.state.selectedBlot) {
+                console.log('updateBlotFormat')
+                this.state.selectedBlot.format(name, value)
+                this.forceUpdate()
+            }
         }
     }
 
     render() {
         return <div className='container'>
             <Toolbar />
-            <div id="editor" onClick={e => {
-    
-                //check if the target have to invoke a corresponding tooltip
-                if (e.target.dataset.tooltip) {
-                    const aBlot = Quill.find(e.target)
-                    console.log('Found blot with a tooltip.', aBlot);
-                    
-                    this.setState({selectedBlot: aBlot}) 
-                    // invoke a tooltip, 
-                    // const width = prompt('enter new image width in %')
-                    // theBlot.format() accordingly to the tooltip input.
-                    // Dismount on tooltip closure.      
+            <div id="editor" onClick={this.lookForBlotsWithTooltip}></div>
 
-                } else {
-                    // no => stop
-                    console.log('no tooltip');
-                }
-            }}></div>
-
-            <Modal>
-                <Tooltip 
-                    parentListener={this.updateBlotFormat} 
-                    tooltipTerminator={new Function()} />
-            </Modal>
+            { 
+                this.state.selectedBlot !== null ?
+                (<Modal>
+                    <Tooltip 
+                        parentListener={this.updateBlotFormat('width') }
+                        currentValue={this.state.selectedBlot.getFormat('width')}
+                        tooltipTerminator={new Function()} />
+                    <Tooltip 
+                        parentListener={this.updateBlotFormat('alt')} type={'text'}
+                        currentValue={this.state.selectedBlot.getFormat('alt')}
+                        tooltipTerminator={new Function()} />
+                </Modal>) 
+                :'no tooltip'
+            }
+            
         </div>
     }
 }
