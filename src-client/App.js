@@ -3,48 +3,10 @@ import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
 import { setConfig } from 'react-hot-loader'
 import Toolbar from './Toolbar'
+import ModalTooltip from './ModalTooltip'
+import TooltipField from './TooltipField'
+import TooltipButton from './TooltipButton'
 setConfig({ logLevel: 'debug' })
-
-
-const modalRoot = document.getElementById('modal-root');
-
-class Modal extends React.Component {
-    constructor(props) {
-      super(props);
-      this.el = document.createElement('div');
-    }
-  
-    componentDidMount() {
-      modalRoot.appendChild(this.el);
-    }
-  
-    componentWillUnmount() {
-      modalRoot.removeChild(this.el);
-    }
-  
-    render() {
-      return ReactDOM.createPortal(
-        <div>
-            <button type="button" onClick={this.props.terminatorOfModal}>close</button>
-            {this.props.children}
-        </div>,
-        this.el,
-      );
-    }
-  }
-
-
-
-
-const Tooltip = (props) => {
-    return <input 
-        type={props.type || 'number' } 
-        value={ props.currentValue || '' }
-        onChange={(e) => {
-            console.log(e.target.value);
-            props.parentListener(e.target.value)
-    }}/>
-}
 
 class App extends React.Component { 
     constructor(props) {
@@ -68,12 +30,12 @@ class App extends React.Component {
                 selectedBlot: aBlot,
                 isTooltipVisible: true
             }) 
+        } else {
+            this.tooltipTerminator()
         }
     }
 
     tooltipTerminator() {
-        console.log('Terminator');
-        
         this.setState({ 
             selectedBlot: null,
             isTooltipVisible: false
@@ -95,47 +57,35 @@ class App extends React.Component {
             <Toolbar />
             <div id="editor" onClick={this.lookForBlotsWithTooltip}></div>
 
-            { 
-                this.state.isTooltipVisible ?
-                (<Modal terminatorOfModal={this.tooltipTerminator} toolptipPosition={{x: 150, y: 150}}>
-                    <Tooltip 
+            { this.state.isTooltipVisible &&
+                (<ModalTooltip terminator={this.tooltipTerminator} position={{x: 150, y: 150}}>
+                    <TooltipField
                         parentListener={this.updateBlotFormat('width') }
                         currentValue={this.state.selectedBlot.getFormat('width')}
                         tooltipTerminator={new Function()} />
-                    <Tooltip 
+                    <TooltipField 
                         parentListener={this.updateBlotFormat('alt')} type={'text'}
                         currentValue={this.state.selectedBlot.getFormat('alt')}
                         tooltipTerminator={new Function()} />
-                    <MarginButton
+                    <TooltipButton
                         parentListener={this.updateBlotFormat('margin')}
                         position={'LEFT'}>
                         {'Left'}
-                    </MarginButton>
-                    <MarginButton
+                    </TooltipButton>
+                    <TooltipButton
                         parentListener={this.updateBlotFormat('margin')}
                         position={'CENTER'}>
                         {'Center'}
-                    </MarginButton>
-                    <MarginButton
+                    </TooltipButton>
+                    <TooltipButton
                         parentListener={this.updateBlotFormat('margin')}
                         position={'RIGHT'}>
                         {'Right'}
-                    </MarginButton>
-                </Modal>) 
-                :'Tooltip hidden'
-            }
-            
+                    </TooltipButton>
+                </ModalTooltip>) 
+                || 'Tooltip hidden' }
         </div>
     }
-}
-
-const MarginButton = (props) => {
-    return <button
-    onClick={e => {
-        props.parentListener(props.position)
-    }}>
-        { props.children }
-    </button>
 }
 
 export default hot(module)(App)

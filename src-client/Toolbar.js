@@ -13,7 +13,7 @@ import VideoBlot from './VideoBlot'
 
 
 const Toolbar = () => {
-    return <div>
+    return <div className='toolbar'>
         <InlineBlotConstructor blotName={'B'} tagName={'b'} formatName={'bold'} />
         <InlineBlotConstructor blotName={'I'} tagName={'i'} formatName={'italic'} />
         <LinkBlot />
