@@ -24,7 +24,10 @@ class Modal extends React.Component {
   
     render() {
       return ReactDOM.createPortal(
-        this.props.children,
+        <div>
+            <button type="button" onClick={this.props.terminatorOfModal}>close</button>
+            {this.props.children}
+        </div>,
         this.el,
       );
     }
@@ -34,21 +37,12 @@ class Modal extends React.Component {
 
 
 const Tooltip = (props) => {
-    //debug
-    console.log('---> debug: <Tooltip> props');
-    console.log(props);
-    
-    //^debug
-    
     return <input 
         type={props.type || 'number' } 
         value={ props.currentValue || '' }
         onChange={(e) => {
             console.log(e.target.value);
             props.parentListener(e.target.value)
-
-            //close tooltip => props.tooltipTerminator()
-            
     }}/>
 }
 
@@ -57,7 +51,8 @@ class App extends React.Component {
         super(props)
 
         this.state = {
-            selectedBlot: null
+            selectedBlot: null,
+            isTooltipVisible: false
         }
 
         this.updateBlotFormat = this.updateBlotFormat.bind(this)
@@ -69,12 +64,20 @@ class App extends React.Component {
          //check if the target have to invoke a corresponding tooltip
          if (e.target.dataset.tooltip) {
             const aBlot = Quill.find(e.target)
-            this.setState({selectedBlot: aBlot}) 
+            this.setState({
+                selectedBlot: aBlot,
+                isTooltipVisible: true
+            }) 
         }
     }
 
     tooltipTerminator() {
-        this.setState({ selectedBlot: null })
+        console.log('Terminator');
+        
+        this.setState({ 
+            selectedBlot: null,
+            isTooltipVisible: false
+         })
     }
 
     updateBlotFormat(name) {
@@ -93,8 +96,8 @@ class App extends React.Component {
             <div id="editor" onClick={this.lookForBlotsWithTooltip}></div>
 
             { 
-                this.state.selectedBlot !== null ?
-                (<Modal>
+                this.state.isTooltipVisible ?
+                (<Modal terminatorOfModal={this.tooltipTerminator} toolptipPosition={{x: 150, y: 150}}>
                     <Tooltip 
                         parentListener={this.updateBlotFormat('width') }
                         currentValue={this.state.selectedBlot.getFormat('width')}
@@ -119,7 +122,7 @@ class App extends React.Component {
                         {'Right'}
                     </MarginButton>
                 </Modal>) 
-                :'no tooltip'
+                :'Tooltip hidden'
             }
             
         </div>
