@@ -12,11 +12,11 @@ import VideoBlot from './VideoBlot'
 
 
 
-const Toolbar = () => {
+const Toolbar = (props) => {
     return <div className='toolbar'>
         <InlineBlotConstructor blotName={'B'} tagName={'b'} formatName={'bold'} />
         <InlineBlotConstructor blotName={'I'} tagName={'i'} formatName={'italic'} />
-        <LinkBlot />
+        <LinkBlot tooltipInvoker={props.tooltipInvoker}/>
         <BlockBlotConstructor blotName={'blockquote'} tagName={'blockquote'} formatName={'blockquote'} />
         <BlockBlotConstructor blotName={'h1'} tagName={'h1'} formatName={'h1'} />
         <BlockBlotConstructor blotName={'h2'} tagName={'h2'} formatName={'h2'} />

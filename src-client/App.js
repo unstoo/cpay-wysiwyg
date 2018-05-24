@@ -14,21 +14,27 @@ class App extends React.Component {
 
         this.state = {
             selectedBlot: null,
-            isTooltipVisible: false
+            isTooltipVisible: false,
+            tooltip: { x: 0, y: 0 },
+            tooltipType: false
         }
 
         this.updateBlotFormat = this.updateBlotFormat.bind(this)
         this.lookForBlotsWithTooltip = this.lookForBlotsWithTooltip.bind(this)
         this.tooltipTerminator = this.tooltipTerminator.bind(this)
+        this.tooltipInvoker = this.tooltipInvoker.bind(this)
     }
 
     lookForBlotsWithTooltip(e) {
          //check if the target have to invoke a corresponding tooltip
          if (e.target.dataset.tooltip) {
+            e.preventDefault()
             const aBlot = Quill.find(e.target)
             this.setState({
                 selectedBlot: aBlot,
-                isTooltipVisible: true
+                isTooltipVisible: true,
+                tooltip: { x: e.clientX, y: e.clientY },
+                tooltipType: e.target.dataset.tooltip
             }) 
         } else {
             this.tooltipTerminator()
@@ -38,52 +44,76 @@ class App extends React.Component {
     tooltipTerminator() {
         this.setState({ 
             selectedBlot: null,
-            isTooltipVisible: false
+            isTooltipVisible: false,
+            tooltip: { x: 0, y: 0 },
+            tooltipType: false
          })
     }
 
     updateBlotFormat(name) {
         return (value) => {
             if (this.state.selectedBlot) {
-                console.log('updateBlotFormat')
+                console.log(`updateBlotFormat(name=${name}, value=${value})`)
                 this.state.selectedBlot.format(name, value)
                 this.forceUpdate()
             }
         }
     }
 
+    tooltipInvoker(coordinates, tooltipType) {
+        if (coordinates === false) {
+            this.tooltipTerminator()
+        }
+    }
+
     render() {
         return <div className='container'>
-            <Toolbar />
+            <Toolbar tooltipInvoker={this.tooltipInvoker} />
             <div id="editor" onClick={this.lookForBlotsWithTooltip}></div>
 
             { this.state.isTooltipVisible &&
-                (<ModalTooltip terminator={this.tooltipTerminator} position={{x: 150, y: 150}}>
-                    <TooltipField
-                        parentListener={this.updateBlotFormat('width') }
-                        currentValue={this.state.selectedBlot.getFormat('width')}
-                        tooltipTerminator={new Function()} />
-                    <TooltipField 
-                        parentListener={this.updateBlotFormat('alt')} type={'text'}
-                        currentValue={this.state.selectedBlot.getFormat('alt')}
-                        tooltipTerminator={new Function()} />
-                    <TooltipButton
-                        parentListener={this.updateBlotFormat('margin')}
-                        position={'LEFT'}>
-                        {'Left'}
-                    </TooltipButton>
-                    <TooltipButton
-                        parentListener={this.updateBlotFormat('margin')}
-                        position={'CENTER'}>
-                        {'Center'}
-                    </TooltipButton>
-                    <TooltipButton
-                        parentListener={this.updateBlotFormat('margin')}
-                        position={'RIGHT'}>
-                        {'Right'}
-                    </TooltipButton>
-                </ModalTooltip>) 
-                || 'Tooltip hidden' }
+                <ModalTooltip 
+                    terminator={this.tooltipTerminator} 
+                    position={{x: this.state.tooltip.x , y: this.state.tooltip.y}}
+                    type={this.state.tooltipType}>
+
+                    {this.state.tooltipType === 'image' &&
+                    <React.Fragment>
+                        <TooltipField
+                            parentListener={this.updateBlotFormat('width') }
+                            currentValue={this.state.selectedBlot.getFormat('width')}/>
+                        <TooltipField 
+                            parentListener={this.updateBlotFormat('alt')} type={'text'}
+                            currentValue={this.state.selectedBlot.getFormat('alt')}/>
+                        <TooltipButton
+                            parentListener={this.updateBlotFormat('margin')}
+                            position={'LEFT'}>
+                            {'Left'}
+                        </TooltipButton>
+                        <TooltipButton
+                            parentListener={this.updateBlotFormat('margin')}
+                            position={'CENTER'}>
+                            {'Center'}
+                        </TooltipButton>
+                        <TooltipButton
+                            parentListener={this.updateBlotFormat('margin')}
+                            position={'RIGHT'}>
+                            {'Right'}
+                        </TooltipButton>
+                    </React.Fragment>
+
+                    ||
+
+                    this.state.isTooltipVisible && this.state.tooltipType === 'link' && 
+                    <React.Fragment>
+                        <TooltipField
+                            parentListener={this.updateBlotFormat('href') }
+                            currentValue={this.state.selectedBlot.getFormat('href')}
+                            type={'text'}/>
+                    </React.Fragment> }
+                </ModalTooltip>
+                ||
+                'Tooltip hidden' }
         </div>
     }
 }

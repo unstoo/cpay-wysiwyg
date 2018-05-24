@@ -7,6 +7,9 @@ class ModalTooltip extends React.Component {
     constructor(props) {
       super(props)
       this.el = document.createElement('div')
+      this.state = {
+        type: this.props.type
+      }
     }
   
     componentDidMount() {
@@ -19,10 +22,10 @@ class ModalTooltip extends React.Component {
   
     render() {
 
-        const divStyle = {
-            left: this.props.position.x,
-            top: this.props.position.y
-        }
+      const divStyle = {
+        left: this.props.position.x,
+        top: this.props.position.y
+      }
 
       return ReactDOM.createPortal(
         <div style={divStyle} className='modal-tooltip'>
