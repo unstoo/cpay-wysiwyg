@@ -11,6 +11,9 @@ class __linkBlot extends Inline {
     // Okay to set other non-format related attributes
     // These are invisible to Parchment so must be static
     node.setAttribute('target', '_blank')
+    const handler = e => console.log(e)
+    node.addEventListener('selectionchange', handler)
+    node.addEventListener('mouseenter', handler)
     return node;
   }
 

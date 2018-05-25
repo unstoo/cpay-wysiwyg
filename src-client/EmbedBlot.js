@@ -2,13 +2,15 @@ import React from 'react'
 import Quill from 'quill'
 let Embed = Quill.import('blots/block/embed')
 
-const EmbedBlotConstructor = ({ blotName, tagName, formatName }) => {
+class __divider extends Embed { }
+    __divider.blotName =    'divider'
+    __divider.tagName =     'hr'
+    __divider.className =   `ql-cpay-hr`
+    Quill.register(__divider)
+
+const EmbedBlotConstructor = () => {
     
-    class aBlot extends Embed { }
-    aBlot.blotName =    'divider'
-    aBlot.tagName =     'hr'
-    aBlot.className =   `ql-cpay-${blotName || 'hr'}`
-    Quill.register(aBlot)
+    
 
     return <button onClick={() => { 
         let range = quill.getSelection(true);

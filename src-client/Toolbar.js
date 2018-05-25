@@ -9,6 +9,7 @@ import StyleBlot from './StyleBlot'
 import Align from './Align'
 import List from './List'
 import VideoBlot from './VideoBlot'
+import ButtonBlot from './ButtonBlot'
 
 
 
@@ -17,6 +18,7 @@ const Toolbar = (props) => {
         <InlineBlotConstructor blotName={'B'} tagName={'b'} formatName={'bold'} />
         <InlineBlotConstructor blotName={'I'} tagName={'i'} formatName={'italic'} />
         <LinkBlot tooltipInvoker={props.tooltipInvoker}/>
+        <ButtonBlot tooltipInvoker={props.tooltipInvoker}/>
         <BlockBlotConstructor blotName={'blockquote'} tagName={'blockquote'} formatName={'blockquote'} />
         <BlockBlotConstructor blotName={'h1'} tagName={'h1'} formatName={'h1'} />
         <BlockBlotConstructor blotName={'h2'} tagName={'h2'} formatName={'h2'} />

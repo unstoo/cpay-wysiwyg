@@ -8,50 +8,50 @@ const ATTRIBUTES = [
   'width'
 ]
 
-const VideoBlot = ({ blotName, tagName, formatName }) => {  
-  
-  class __videoBlot extends Embed {
-    static create(value) {
-      let node = super.create(value);
-      node.setAttribute('frameborder', '0');
-      node.setAttribute('allowfullscreen', true);
-      node.setAttribute('src', value.src);
-      return node;
-    }
-  
-    static formats(domNode) {
-      return ATTRIBUTES.reduce(function(formats, attribute) {
-        if (domNode.hasAttribute(attribute)) {
-          formats[attribute] = domNode.getAttribute(attribute);
-        }
-        return formats;
-      }, {});
-    }
-  
-  
-    static value(domNode) {
-      return {
-       src: domNode.getAttribute('src')
+class __videoBlot extends Embed {
+  static create(value) {
+    let node = super.create(value);
+    node.setAttribute('frameborder', '0');
+    node.setAttribute('allowfullscreen', true);
+    node.setAttribute('src', value.src);
+    return node;
+  }
+
+  static formats(domNode) {
+    return ATTRIBUTES.reduce(function(formats, attribute) {
+      if (domNode.hasAttribute(attribute)) {
+        formats[attribute] = domNode.getAttribute(attribute);
       }
-    }
-  
-    format(name, value) {
-      if (ATTRIBUTES.indexOf(name) > -1) {
-        if (value) {
-          this.domNode.setAttribute(name, value);
-        } else {
-          this.domNode.removeAttribute(name);
-        }
-      } else {
-        super.format(name, value);
-      }
+      return formats;
+    }, {});
+  }
+
+
+  static value(domNode) {
+    return {
+     src: domNode.getAttribute('src')
     }
   }
 
-  __videoBlot.blotName = 'video';
-  __videoBlot.className = 'ql-video';
-  __videoBlot.tagName = 'IFRAME';
-  Quill.register(__videoBlot)
+  format(name, value) {
+    if (ATTRIBUTES.indexOf(name) > -1) {
+      if (value) {
+        this.domNode.setAttribute(name, value);
+      } else {
+        this.domNode.removeAttribute(name);
+      }
+    } else {
+      super.format(name, value);
+    }
+  }
+}
+
+__videoBlot.blotName = 'video';
+__videoBlot.className = 'ql-video';
+__videoBlot.tagName = 'IFRAME';
+Quill.register(__videoBlot)
+
+const VideoBlot = ({ blotName, tagName, formatName }) => {  
 
   return <button onClick={() => {
 

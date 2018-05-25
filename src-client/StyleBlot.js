@@ -2,19 +2,17 @@ import React from 'react'
 import Quill from 'quill'
 let Parchment = Quill.import('parchment')
 
+let classStyle = new Parchment.Attributor.Class('size', 'cpay-ql-size', {
+  scope: Parchment.Scope.INLINE,
+  whitelist: []
+})
 
+Quill.register({
+  ['formats/size']: classStyle
+})
 
 const StyleBlot = ({ blotName, tagName, formatName, optionsList }) => {
-    
-    let classStyle = new Parchment.Attributor.Class('size', 'cpay-ql-size', {
-      scope: Parchment.Scope.INLINE,
-      whitelist: optionsList
-    })
 
-    Quill.register({
-      ['formats/'+ formatName]: classStyle
-    })
-    
     return <select 
       onClick={(e) => {     
 

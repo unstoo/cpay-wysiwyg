@@ -86,3 +86,19 @@ iframe {
     padding-left: 15px;
     margin: 10px;
 }
+
+.ql-cpay-button {
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid dodgerblue;
+    background: dodgerblue;
+    color: white;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0 auto;
+}
+
+.ql-cpay-button-container {
+    width: 100%;
+    display: flex;
+}
