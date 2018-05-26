@@ -1,23 +1,19 @@
 import React from 'react'
-import Quill from 'quill'
-let Inline = Quill.import('blots/inline')
 
-const InlineBlotConstructor = ({ blotName, tagName, formatName }) => {
+const InlineBlotConstructor = ({ buttonName, formatName }) => {
 
-    return <button onClick={() => {      
-        const appliedFormats = quill.getFormat()
-        
-        if (!appliedFormats.formatName) {
-            quill.format(formatName, true);
-        } else {
-            const range = quill.getSelection()
-            quill.formatText(range.index, range.length, formatName, false)
+    const applyFormat = (e, format = formatName) => {
+            const appliedFormats = quill.getFormat()
+            if (!appliedFormats[format]) {
+                quill.format(format, true)
+            } else {
+                quill.format(format, false)
+            }
         }
-    }}>
-        {blotName}
+
+    return <button onClick={applyFormat}>
+        {buttonName}
     </button>
-
 }
-
 
 export default InlineBlotConstructor

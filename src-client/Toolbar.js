@@ -15,8 +15,8 @@ import ButtonBlot from './ButtonBlot'
 
 const Toolbar = (props) => {
     return <div className='toolbar'>
-        <InlineBlotConstructor blotName={'B'} tagName={'b'} formatName={'bold'} />
-        <InlineBlotConstructor blotName={'I'} tagName={'i'} formatName={'italic'} />
+        <InlineBlotConstructor buttonName={'Bold'} formatName={'bold'} />
+        <InlineBlotConstructor buttonName={'Italic'} formatName={'italic'} />
         <LinkBlot tooltipInvoker={props.tooltipInvoker}/>
         <ButtonBlot tooltipInvoker={props.tooltipInvoker}/>
         <BlockBlotConstructor blotName={'blockquote'} tagName={'blockquote'} formatName={'blockquote'} />
