@@ -39,14 +39,16 @@ var bindings = {
     format: [ 'button', 'buttonContainer'],
     offset: 0,
     handler: function(range, context) {
-      // Handle shift+b
-      console.log(range, context);
       this.quill.format('button', false)
-      
     }
   },
-
-
+  custom: {
+    key: 'enter',
+    format: [ 'button', 'buttonContainer'],
+    handler: function(range, context) {
+      this.quill.setSelection({index: range.index + 1, length: 0})
+    }
+  },
   list: {
     key: 'backspace',
     format: ['list'],
@@ -74,16 +76,6 @@ const quillInit = () => {
   })
 
   
-
-  quill.keyboard.addBinding({ key: 'a' }, {
-    collapsed: true,
-    format: ['', 'button', 'buttonContainer'],
-    offset: 0
-  }, function(range, context) {
-    debugger
-    
-  });
-  
   // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <blockquote>, <ul>.
   document.getElementById('editor').addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
@@ -96,6 +88,7 @@ const quillInit = () => {
           }
       }
   })
+}
 
   // window.quill.on('text-change', function(delta, oldDelta, source) {
   //     console.log(JSON.stringify(delta.ops, null, 2), source)
@@ -120,12 +113,8 @@ const quillInit = () => {
   //     }
   // })
 
-
- 
-}
-
-const selectedDeltaIsImage = (deltaChunk) => {
-  return deltaChunk.ops[0].insert.image
-}
+// const selectedDeltaIsImage = (deltaChunk) => {
+//   return deltaChunk.ops[0].insert.image
+// }
 
 quillInit()

@@ -45,7 +45,7 @@ __linkBlot.className = `ql-cpay-link`
 Quill.register(__linkBlot)
 
 class LinkBlot extends React.Component {
-    
+
 render() {
   return <button onClick={() => { 
       const selection = quill.getSelection()

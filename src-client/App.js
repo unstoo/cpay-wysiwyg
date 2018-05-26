@@ -30,6 +30,7 @@ class App extends React.Component {
          if (e.target.dataset.tooltip) {
             e.preventDefault()
             const aBlot = Quill.find(e.target)
+            
             this.setState({
                 selectedBlot: aBlot,
                 isTooltipVisible: true,
