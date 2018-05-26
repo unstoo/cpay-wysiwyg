@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InlineBlotConstructor = ({ buttonName, formatName }) => {
+const InlineBlot = ({ buttonName, formatName }) => {
 
   const applyFormat = (e, format = formatName) => {
     const appliedFormats = quill.getFormat()
@@ -16,4 +16,4 @@ const InlineBlotConstructor = ({ buttonName, formatName }) => {
   </button>
 }
 
-export default InlineBlotConstructor
+export default InlineBlot

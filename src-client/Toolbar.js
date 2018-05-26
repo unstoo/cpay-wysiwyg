@@ -1,6 +1,6 @@
 import React from 'react'
-import InlineBlotConstructor from './InlineBlotConstructor'
-import BlockBlotConstructor from './BlockBlotConstructor'
+import InlineBlot from './InlineBlot'
+import BlockBlot from './BlockBlot'
 import LinkBlot from './LinkBlot'
 import ImageBlot from './ImageBlot'
 import ClearFormat from './ClearFormat';
@@ -15,14 +15,14 @@ import ButtonBlot from './ButtonBlot'
 
 const Toolbar = (props) => {
     return <div className='toolbar'>
-        <InlineBlotConstructor buttonName={'Bold'} formatName={'bold'} />
-        <InlineBlotConstructor buttonName={'Italic'} formatName={'italic'} />
+        <InlineBlot buttonName='Bold' formatName='bold' />
+        <InlineBlot buttonName='Italic' formatName='italic' />
         <LinkBlot tooltipInvoker={props.tooltipInvoker}/>
         <ButtonBlot tooltipInvoker={props.tooltipInvoker}/>
-        <BlockBlotConstructor blotName={'blockquote'} tagName={'blockquote'} formatName={'blockquote'} />
-        <BlockBlotConstructor blotName={'h1'} tagName={'h1'} formatName={'h1'} />
-        <BlockBlotConstructor blotName={'h2'} tagName={'h2'} formatName={'h2'} />
-        <BlockBlotConstructor blotName={'h3'} tagName={'h3'} formatName={'h3'} />
+        <InlineBlot buttonName='Quote' formatName='blockquote' />
+        <BlockBlot buttonName='Header 1' formatName='header' formatValue='1' />
+        <BlockBlot buttonName='Header 2' formatName='header' formatValue='2' />
+        <BlockBlot buttonName='Header 3' formatName='header' formatValue='3'/>
         <EmbedBlotConstructor/>
 
         <ImageBlot />
