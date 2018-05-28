@@ -42,11 +42,20 @@ var bindings = {
       this.quill.format('button', false)
     }
   },
-  custom: {
+  customButtonEnter: {
     key: 'enter',
     format: [ 'button', 'buttonContainer'],
     handler: function(range, context) {
       this.quill.setSelection({index: range.index + 1, length: 0})
+    }
+  },
+  customQuoteEnter: {
+    key: 'enter',
+    format: [ 'blockquote'],
+    shift: true,
+    shiftKey: true,
+    handler: function(range, context) {
+      this.quill.insertText(range.index, '\n')
     }
   },
   list: {
@@ -76,14 +85,14 @@ const quillInit = () => {
   })
 
   
-  // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <blockquote>, <ul>.
+  // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <ul>.
   document.getElementById('editor').addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
           const cursorPosition = (quill.getSelection()).index
           
           const activeFormats = (quill.getFormat())
 
-          if (!(activeFormats.blockquote || activeFormats.list)) {
+          if (!(activeFormats.list)) {
               Object.keys(quill.removeFormat(cursorPosition))
           }
       }

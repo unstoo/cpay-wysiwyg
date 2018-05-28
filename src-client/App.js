@@ -9,38 +9,38 @@ import TooltipButton from './TooltipButton'
 setConfig({ logLevel: 'debug' })
 
 class App extends React.Component { 
-    constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
 
-        this.state = {
-            selectedBlot: null,
-            isTooltipVisible: false,
-            tooltip: { x: 0, y: 0 },
-            tooltipType: false
-        }
-
-        this.updateBlotFormat = this.updateBlotFormat.bind(this)
-        this.lookForBlotsWithTooltip = this.lookForBlotsWithTooltip.bind(this)
-        this.tooltipTerminator = this.tooltipTerminator.bind(this)
-        this.tooltipInvoker = this.tooltipInvoker.bind(this)
+    this.state = {
+        selectedBlot: null,
+        isTooltipVisible: false,
+        tooltip: { x: 0, y: 0 },
+        tooltipType: false
     }
 
-    lookForBlotsWithTooltip(e) {
-         //check if the target have to invoke a corresponding tooltip
-         if (e.target.dataset.tooltip) {
-            e.preventDefault()
-            const aBlot = Quill.find(e.target)
-            
-            this.setState({
-                selectedBlot: aBlot,
-                isTooltipVisible: true,
-                tooltip: { x: e.clientX, y: e.clientY },
-                tooltipType: e.target.dataset.tooltip
-            }) 
-        } else {
-            this.tooltipTerminator()
-        }
+    this.updateBlotFormat = this.updateBlotFormat.bind(this)
+    this.monitorsClicksOnTooltipableBlots = this.monitorsClicksOnTooltipableBlots.bind(this)
+    this.tooltipTerminator = this.tooltipTerminator.bind(this)
+    this.tooltipInvoker = this.tooltipInvoker.bind(this)
+  }
+
+  monitorsClicksOnTooltipableBlots(e) {
+    //check if the target have to invoke a corresponding tooltip
+    if (e.target.dataset.tooltip) {
+      e.preventDefault()
+      const aBlot = Quill.find(e.target)
+
+      this.setState({
+          selectedBlot: aBlot,
+          isTooltipVisible: true,
+          tooltip: { x: e.clientX, y: e.clientY + 10 },
+          tooltipType: e.target.dataset.tooltip
+      }) 
+    } else {
+        this.tooltipTerminator()
     }
+  }
 
     tooltipTerminator() {
         this.setState({ 
@@ -69,8 +69,8 @@ class App extends React.Component {
 
     render() {
         return <div className='container'>
-            <Toolbar tooltipInvoker={this.tooltipInvoker} />
-            <div id="editor" onClick={this.lookForBlotsWithTooltip}></div>
+            <Toolbar />
+            <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots}></div>
 
             { this.state.isTooltipVisible &&
                 <ModalTooltip 

@@ -12,7 +12,7 @@ const InlineBlot = ({ buttonName, formatName }) => {
   }
 
   return <button onClick={applyFormat}>
-      {buttonName}
+    {buttonName}
   </button>
 }
 

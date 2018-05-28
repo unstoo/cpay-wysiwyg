@@ -25,12 +25,6 @@ class __linkBlot extends Inline {
   }
 
   format(name, value) {
-    //debug
-    console.log('---> debug: __linkBlot.format($name, $value)');
-    console.log(name, value);
-    
-    //^debug
-    
     this.domNode.setAttribute(name, value)
   }
 
@@ -51,14 +45,8 @@ render() {
       const selection = quill.getSelection()
       
       if (selection.length === 0) return
-      let href = prompt('Enter link URL')
+      let href = 'https://cryptopay.me'
       
-      const selectionCoordinates = quill.getBounds(selection.index)
-
-      // this.props.invokeTooltip(selectionCoordinates)
-
-      // красивый tooltip при добавлении и на ховер
-      // вызов тултипа. если линк предоставлен, то quill.format('link', value = href)
       quill.format('link', href)}}>
       {'Link'}
     </button>
