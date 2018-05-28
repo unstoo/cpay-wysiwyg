@@ -55,21 +55,16 @@ const VideoBlot = ({ blotName, tagName, formatName }) => {
 
   return <button onClick={() => {
 
-      let width = prompt('Enter image width in %')
-      console.log(width);
-      
-      // Взять картинку:
-      // 1 линк
-      // 2 локальную: загрузить в облако, подставить линк.
-      let range = quill.getSelection(true);
+    let width = prompt('Enter image width in %')
+    let range = quill.getSelection(true);
 
-      quill.insertEmbed(range.index, 'video', {
-        src: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
-        width: 300,
-        height: 300
-      }, Quill.sources.USER);
+    quill.insertEmbed(range.index, 'video', {
+      src: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
+      width: 300,
+      height: 300
+    }, Quill.sources.USER);
 
-      // quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    // quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
    }}>
       {'Video'}

@@ -4,36 +4,16 @@ import App from './App'
 import Quill from 'quill'
 import './styles.css'
 
-const root = document.getElementById('root')
-
 window.Quill = Quill
 window.Delta = Quill.import('delta')
 window.Parchment = Quill.import('parchment')
 window.Keyboard = Quill.import('modules/keyboard')
 
+const root = document.getElementById('root')
 ReactDOM.render(<App />, root)
 
 
 var bindings = {
-  // This will overwrite the default binding also named 'tab'
-  tab: {
-    key: 9,
-    handler: function() {
-      // Handle tab
-    }
-  },
-
-  // There is no default binding named 'custom'
-  // so this will be added without overwriting anything
-  custom: {
-    key: 'B',
-    shiftKey: true,
-    handler: function(range, context) {
-      // Handle shift+b
-      console.log(range, context);
-      
-    }
-  },
   custom: {
     key: 'backspace',
     format: [ 'button', 'buttonContainer'],
@@ -52,7 +32,6 @@ var bindings = {
   customQuoteEnter: {
     key: 'enter',
     format: [ 'blockquote'],
-    shift: true,
     shiftKey: true,
     handler: function(range, context) {
       this.quill.insertText(range.index, '\n')
@@ -65,15 +44,14 @@ var bindings = {
       if (context.offset === 0) {
         // When backspace on the first character of a list,
         // remove the list instead
-        this.quill.format('list', false, Quill.sources.USER);
+        this.quill.format('list', false, Quill.sources.USER)
       } else {
         // Otherwise propogate to Quill's default
-        return true;
+        return true
       }
     }
   }
-};
-
+}
 
 const quillInit = () => { 
   window.quill = new Quill('#editor', {
@@ -83,7 +61,6 @@ const quillInit = () => {
       }
     }
   })
-
   
   // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <ul>.
   document.getElementById('editor').addEventListener('keyup', (e) => {
@@ -99,6 +76,7 @@ const quillInit = () => {
   })
 }
 
+{
   // window.quill.on('text-change', function(delta, oldDelta, source) {
   //     console.log(JSON.stringify(delta.ops, null, 2), source)
   //     if (source == 'api') {
@@ -122,8 +100,9 @@ const quillInit = () => {
   //     }
   // })
 
-// const selectedDeltaIsImage = (deltaChunk) => {
-//   return deltaChunk.ops[0].insert.image
-// }
+  // const selectedDeltaIsImage = (deltaChunk) => {
+  //   return deltaChunk.ops[0].insert.image
+  // }
+}
 
 quillInit()

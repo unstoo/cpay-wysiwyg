@@ -15,8 +15,8 @@ const Toolbar = (props) => {
   return <div className='toolbar'>
     <InlineBlot buttonName='Bold' formatName='bold' />
     <InlineBlot buttonName='Italic' formatName='italic' />
-    <LinkBlot tooltipInvoker={props.tooltipInvoker}/>
-    <ButtonBlot tooltipInvoker={props.tooltipInvoker}/>
+    <LinkBlot />
+    <ButtonBlot />
     <InlineBlot buttonName='Quote' formatName='blockquote' />
     <BlockBlot buttonName='Header 1' formatName='header' formatValue='1' />
     <BlockBlot buttonName='Header 2' formatName='header' formatValue='2' />
