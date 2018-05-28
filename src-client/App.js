@@ -19,9 +19,11 @@ class App extends React.Component {
       tooltipType: false
     }
 
+    
+
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
     this.monitorsClicksOnTooltipableBlots = this.monitorsClicksOnTooltipableBlots.bind(this)
-    this.tooltipTerminator = this.tooltipTerminator.bind(this)
+    this.tooltipTerminator = window.tooltipTerminator = this.tooltipTerminator.bind(this)
     this.tooltipInvoker = this.tooltipInvoker.bind(this)
   }
 
@@ -40,7 +42,11 @@ class App extends React.Component {
       tooltipType = e.target.parentNode.dataset.tooltip
     }
 
-    if (aBlot) {
+    
+    if (aBlot && e.target.value !== '') {
+      
+      e.target.addEventListener('keypress', e => { console.log(e) })
+      
       this.setState({
         selectedBlot: aBlot,
         isTooltipVisible: true,
@@ -76,10 +82,25 @@ class App extends React.Component {
     }
   }
 
+  keys(e) {
+    
+    console.log(e.nativeEvent.path[0].innerHTML)
+    
+    if (e.key === 'Enter') {
+      const cursorPosition = (quill.getSelection()).index
+      
+      const activeFormats = (quill.getFormat())
+
+      if (!(activeFormats.list)) {
+        Object.keys(quill.removeFormat(cursorPosition))
+      }
+    }
+  }
+
   render() {
     return <div className='container'>
       <Toolbar />
-      <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots}></div>
+      <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 
       { this.state.isTooltipVisible &&
         <ModalTooltip 

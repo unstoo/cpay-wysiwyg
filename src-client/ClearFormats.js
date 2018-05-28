@@ -6,6 +6,6 @@ const clearFormats = () => {
   quill.removeFormat(selection.index, selection.length)
 }
 
-const ClearFormats = () => <button onClick={clearFormats}> {'Clear'} </button>
+const ClearFormats = () => <button onClick={clearFormats}>Clear</button>
 
 export default ClearFormats

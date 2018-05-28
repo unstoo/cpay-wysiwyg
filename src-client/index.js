@@ -14,9 +14,21 @@ ReactDOM.render(<App />, root)
 
 
 var bindings = {
+  lol: {
+    key: 'backspace',
+    format: ['link'],
+    offset: 1,
+    handler: function(range, context) {
+      if (context.suffix === '') {
+        // A method from App.js. Since Quill.js doesn't allow to attach a keybord event listener on its html nodes.
+        tooltipTerminator()
+      }
+      return true
+    }
+  },
   custom: {
     key: 'backspace',
-    format: [ 'button', 'buttonContainer'],
+    format: ['button', 'buttonContainer'],
     offset: 0,
     handler: function(range, context) {
       this.quill.format('button', false)
@@ -24,9 +36,10 @@ var bindings = {
   },
   customButtonEnter: {
     key: 'enter',
-    format: [ 'button', 'buttonContainer'],
+    format: ['button', 'buttonContainer'],
     handler: function(range, context) {
       this.quill.setSelection({index: range.index + 1, length: 0})
+      return true
     }
   },
   customQuoteEnter: {
@@ -35,6 +48,7 @@ var bindings = {
     shiftKey: true,
     handler: function(range, context) {
       this.quill.insertText(range.index, '\n')
+      return true
     }
   },
   list: {
@@ -45,6 +59,7 @@ var bindings = {
         // When backspace on the first character of a list,
         // remove the list instead
         this.quill.format('list', false, Quill.sources.USER)
+        return true
       } else {
         // Otherwise propogate to Quill's default
         return true
@@ -61,48 +76,11 @@ const quillInit = () => {
       }
     }
   })
+}
+
+  
   
   // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <ul>.
-  document.getElementById('editor').addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') {
-          const cursorPosition = (quill.getSelection()).index
-          
-          const activeFormats = (quill.getFormat())
-
-          if (!(activeFormats.list)) {
-              Object.keys(quill.removeFormat(cursorPosition))
-          }
-      }
-  })
-}
-
-{
-  // window.quill.on('text-change', function(delta, oldDelta, source) {
-  //     console.log(JSON.stringify(delta.ops, null, 2), source)
-  //     if (source == 'api') {
-  //       console.log("An API call triggered this change.");
-  //     } else if (source == 'user') {
-  //       console.log("A user action triggered this change.");
-  //     }
-  // })
-
-  // window.quill.on('selection-change', function(range, oldRange, source) {
-  //     if (!range) return
-  //     const selectedDelta = quill.getContents(range.index, range.length)
-  //     console.log(selectedDelta);
-      
-  //     if (selectedDelta.ops.length === 0) return
-  
-  //     if (source == 'api') {
-  //       console.log("API::Selection-change.", selectedDelta)
-  //     } else if (source == 'user') {
-  //       console.log("USER::Seclection-change", selectedDelta)
-  //     }
-  // })
-
-  // const selectedDeltaIsImage = (deltaChunk) => {
-  //   return deltaChunk.ops[0].insert.image
-  // }
-}
+  // document.getElementById('editor').addEventListener('
 
 quillInit()

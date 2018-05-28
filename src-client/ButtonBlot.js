@@ -127,14 +127,14 @@ class ButtonBlot extends React.Component {
 
   render() {
   return <button onClick={() => { 
-      let selection = quill.getSelection()
-      
-      if (selection.length === 0) return
+    let selection = quill.getSelection()
+    
+    if (selection.length === 0) return
       quill.insertText(selection.index + selection.length, '\n')
       quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
       quill.format('buttonContainer', true)
-      }}>
-      {'Button'}
+    }}>
+    Button
     </button>
   }
 }
