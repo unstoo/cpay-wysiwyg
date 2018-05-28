@@ -18,6 +18,8 @@ class __imageBlot extends Embed {
         node.setAttribute('alt', value.alt)
         attr.src = value.url
         node.setAttribute('src', value.url)
+        attr.id = value.id
+        node.setAttribute('id', value.id)
 
         if (!value.style) return node
 
@@ -48,9 +50,9 @@ class __imageBlot extends Embed {
 
       format(name, value) {
         // update required attribute
-
+        debugger
         const allowedStyleProps = ['width', 'margin']
-        const otherAllowedAttrs = ['alt', 'src']
+        const otherAllowedAttrs = ['alt', 'src', 'id']
         const enum_margins = {
             LEFT: '0 auto 0 0',
             RIGHT: '0 0 0 auto',
@@ -77,56 +79,64 @@ class __imageBlot extends Embed {
             
             this.domNode.setAttribute('style', composedStyle)
         } 
-        
-        
 
         this.domNode.setAttribute('data-attrs', JSON.stringify(attrs))
       }
 
-    getFormat(name) {
-        const allowedAttrs = ['width', 'margin', 'alt', 'src']
-        let attrs = this.domNode.getAttribute('data-attrs')
-        attrs = JSON.parse(attrs)
-          
-        if (allowedAttrs.includes(name) === -1) return undefined
-        if (attrs[name]) return attrs[name]
-        if (attrs.style[name]) return attrs.style[name]
+  getFormat(name) {
+    const allowedAttrs = ['width', 'margin', 'alt', 'src']
+    let attrs = this.domNode.getAttribute('data-attrs')
+    attrs = JSON.parse(attrs)
+      
+    if (allowedAttrs.includes(name) === -1) return undefined
+    if (attrs[name]) return attrs[name]
+    if (attrs.style[name]) return attrs.style[name]
 
-        return undefined
-      }
- }
+    return undefined
+  }
+}
 
- __imageBlot.blotName =    'image'
- __imageBlot.tagName =     'img'
- __imageBlot.className =   `ql-cpay-img`
+__imageBlot.blotName =    'image'
+__imageBlot.tagName =     'img'
+__imageBlot.className =   `ql-cpay-img`
 Quill.register(__imageBlot)
 
-const ImageBlot = () => {
+const ImageBlot = ({invokeTooltip}) => {
 
-    return <button onClick={() => {
+  return <button onClick={() => {
 
-        let width = prompt('Enter image width in %')
-        
-        // Взять картинку:
-        // 1 линк
-        // 2 локальную: загрузить в облако, подставить линк.
+    let width = prompt('Enter image width in %')
+    const uniqueImgId = '42'
+    // Взять картинку:
+    // 1 линк
+    // 2 локальную: загрузить в облако, подставить линк.
 
-        let range = quill.getSelection(true);
+    let range = quill.getSelection(true)
+    console.log(quill.getBounds(range.index))
+    debugger
+    console.log(quill.insertEmbed(range.index, 'image', {
+        id: uniqueImgId,
+        alt: 'Quill Cloud',
+        url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
+        style: {
+            width,
+            margin: 'right'
+        }
+    }, Quill.sources.USER))
 
-        quill.insertEmbed(range.index, 'image', {
-            alt: 'Quill Cloud',
-            url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
-            style: {
-                width,
-                margin: 'right'
-            }
-        }, Quill.sources.USER);
+    invokeTooltip({
+      tooltipType: 'image',
+      aBlot: Quill.find(document.getElementById('42')),
+      tooltip: {
+        x: 50,
+        y: 50
+      }
+    })
+    // // quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
-        // quill.setSelection(range.index + 1, Quill.sources.SILENT);
-
-     }}>
-        {'Image'}
-    </button>
+  }}>
+    Image
+  </button>
 }
 
 export default ImageBlot

@@ -24,7 +24,7 @@ class App extends React.Component {
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
     this.monitorsClicksOnTooltipableBlots = this.monitorsClicksOnTooltipableBlots.bind(this)
     this.tooltipTerminator = window.tooltipTerminator = this.tooltipTerminator.bind(this)
-    this.tooltipInvoker = this.tooltipInvoker.bind(this)
+    this.invokeTooltip = this.invokeTooltip.bind(this)
   }
 
   monitorsClicksOnTooltipableBlots(e) {
@@ -76,10 +76,14 @@ class App extends React.Component {
     }
   }
 
-  tooltipInvoker(coordinates, tooltipType) {
-    if (coordinates === false) {
-      this.tooltipTerminator()
-    }
+  invokeTooltip({ tooltip, tooltipType, aBlot}) {
+   
+    this.setState({ 
+      selectedBlot: aBlot,
+      isTooltipVisible: true,
+      tooltip,
+      tooltipType
+    })
   }
 
   keys(e) {
@@ -99,7 +103,7 @@ class App extends React.Component {
 
   render() {
     return <div className='container'>
-      <Toolbar />
+      <Toolbar invokeTooltip={this.invokeTooltip} />
       <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 
       { this.state.isTooltipVisible &&

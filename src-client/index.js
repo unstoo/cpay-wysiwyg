@@ -16,7 +16,7 @@ ReactDOM.render(<App />, root)
 var bindings = {
   lol: {
     key: 'backspace',
-    format: ['link'],
+    format: ['link', 'buttonContainer'],
     offset: 1,
     handler: function(range, context) {
       if (context.suffix === '') {

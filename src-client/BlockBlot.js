@@ -15,7 +15,7 @@ const BlockBlot = ({ buttonName, formatName, formatValue }) => {
         const range = quill.getSelection()
         quill.formatLine(range.index, range.length, format, false)
     }
- }
+  }
   
   return <button onClick={applyFormat}> {buttonName} </button>
 }

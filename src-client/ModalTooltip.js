@@ -29,7 +29,7 @@ class ModalTooltip extends React.Component {
     return ReactDOM.createPortal(
       <div style={divStyle} className='modal-tooltip'>
           {this.props.children}
-          <button type="button" onClick={this.props.terminator}>x</button>
+          <button type='button' onClick={this.props.terminator}>x</button>
       </div>,
       this.el)
   }

@@ -11,7 +11,7 @@ import List from './List'
 import VideoBlot from './VideoBlot'
 import ButtonBlot from './ButtonBlot'
 
-const Toolbar = (props) => {
+const Toolbar = ({invokeTooltip}) => {
   return <div className='toolbar'>
     <InlineBlot buttonName='Bold' formatName='bold' />
     <InlineBlot buttonName='Italic' formatName='italic' />
@@ -21,9 +21,9 @@ const Toolbar = (props) => {
     <BlockBlot buttonName='Header 1' formatName='header' formatValue='1' />
     <BlockBlot buttonName='Header 2' formatName='header' formatValue='2' />
     <BlockBlot buttonName='Header 3' formatName='header' formatValue='3'/>
-    <EmbedBlotConstructor/>
+    <EmbedBlotConstructor />
 
-    <ImageBlot />
+    <ImageBlot invokeTooltip={invokeTooltip} />
     <ClearFormats />
     <FontSize />
     <TextAlign />
