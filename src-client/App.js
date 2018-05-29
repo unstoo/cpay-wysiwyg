@@ -16,10 +16,10 @@ class App extends React.Component {
       selectedBlot: null,
       isTooltipVisible: false,
       tooltip: { x: 0, y: 0 },
-      tooltipType: false
-    }
-
-    
+      tooltipType: false,
+      isToolbarVisible: true,
+      articlePreviewMode: false
+    }    
 
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
     this.monitorsClicksOnTooltipableBlots = this.monitorsClicksOnTooltipableBlots.bind(this)
@@ -87,9 +87,6 @@ class App extends React.Component {
   }
 
   keys(e) {
-    
-    console.log(e.nativeEvent.path[0].innerHTML)
-    
     if (e.key === 'Enter') {
       const cursorPosition = (quill.getSelection()).index
       
@@ -103,7 +100,13 @@ class App extends React.Component {
 
   render() {
     return <div className='container'>
-      <Toolbar invokeTooltip={this.invokeTooltip} />
+      <div className='toggler-wrapper'>
+          <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
+          <button className='toggler  toggler--preview' onClick={new Function()}>Prev</button>
+          <button className='toggler  toggler--export-html' onClick={() =>console.log(quill.root.innerHTML)}>But</button>
+      </div>
+      { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
+
       <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 
       { this.state.isTooltipVisible &&

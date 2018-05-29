@@ -11,7 +11,7 @@ import List from './List'
 import VideoBlot from './VideoBlot'
 import ButtonBlot from './ButtonBlot'
 
-const Toolbar = ({invokeTooltip}) => {
+const Toolbar = ({ invokeTooltip }) => {
   return <div className='toolbar'>
     <InlineBlot buttonName='Bold' formatName='bold' />
     <InlineBlot buttonName='Italic' formatName='italic' />

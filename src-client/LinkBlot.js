@@ -17,7 +17,12 @@ class __linkBlot extends Inline {
   }
 
   format(name, value) {
-    this.domNode.setAttribute(name, value)
+    if (value !== false) {
+      this.domNode.setAttribute(name, value)
+    } else {
+      super.format(name, value)
+    }
+
   }
 
   getFormat(name) {
@@ -38,8 +43,17 @@ class LinkBlot extends React.Component {
       
       if (selection.length === 0) return
       let href = 'https://cryptopay.me'
+
+      const appliedFormats = quill.getFormat()
+
+      if (!appliedFormats.link) {
+          quill.format('link', href)
+      } else {
+        debugger
+          quill.format('link', false)
+      }
       
-      quill.format('link', href)}}>
+    }}>
       Link
     </button>
   }
