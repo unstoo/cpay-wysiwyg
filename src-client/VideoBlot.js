@@ -55,19 +55,19 @@ const VideoBlot = ({ blotName, tagName, formatName }) => {
 
   return <button onClick={() => {
 
-    let width = prompt('Enter image width in %')
+    let url = prompt('Enter youtube video link:')
     let range = quill.getSelection(true);
-
+    url = url.split('watch?v=').join('embed/') + '?showinfo=0'
     quill.insertEmbed(range.index, 'video', {
-      src: 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
+      src: url || 'https://www.youtube.com/embed/QHH3iSeDBLo?showinfo=0',
       width: 300,
       height: 300
     }, Quill.sources.USER);
 
-    // quill.setSelection(range.index + 1, Quill.sources.SILENT);
+    quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
    }}>
-      {'Video'}
+      Video
   </button>
 
 }

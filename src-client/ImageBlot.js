@@ -29,7 +29,7 @@ class __imageBlot extends Embed {
     
     if (value.style.width) {
         attr.style.width = value.style.width
-        composedStyle += `width: ${value.style.width}%;`
+        composedStyle += `width: ${value.style.width}%; height: ${value.style.width}%;`
     }
     
     if (value.style.margin) {
@@ -70,7 +70,7 @@ class __imageBlot extends Embed {
       let composedStyle = ''
       const margin = enum_margins[ attrs.style.margin.toUpperCase() ]
       
-      composedStyle += `width: ${attrs.style.width}%;`
+      composedStyle += `width: ${attrs.style.width}%; height:${attrs.style.width}%;`
       composedStyle += `margin: ${margin};`
       
       this.domNode.setAttribute('style', composedStyle)
@@ -102,6 +102,7 @@ const ImageBlot = ({invokeTooltip}) => {
   return <button onClick={() => {
 
     let width = prompt('Enter image width in %')
+    let url = prompt('Enter image url')
 
     // TODO: prompt for:
     // 1. local img; ask for -> file, alt, size
@@ -122,10 +123,11 @@ const ImageBlot = ({invokeTooltip}) => {
     quill.insertEmbed(range.index, 'image', {
       id: uniqueImgId,
       alt: 'Quill Cloud',
-      url: 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
+      url: url || 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
       style: {
-          width,
-          margin: 'right'
+          width: width || '50',
+          height: width || '50',
+          margin: 'center'
       }
     }, Quill.sources.USER)
 
