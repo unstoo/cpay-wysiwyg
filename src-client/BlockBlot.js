@@ -2,8 +2,9 @@ import React from 'react'
 import Quill from 'quill'
 let Block = Quill.import('blots/block')
 
-const BlockBlot = ({ buttonName, formatName, formatValue }) => {
-    
+const BlockBlot = ({ buttonName, formatName, formatValue, cssClass }) => {
+  console.log(cssClass);
+  
   const applyFormat = (e, format = formatName, value = formatValue) => { 
 
     const isFormatApplied = quill.getFormat()[formatName] ? true : false
@@ -17,7 +18,7 @@ const BlockBlot = ({ buttonName, formatName, formatValue }) => {
     }
   }
   
-  return <button onClick={applyFormat}> {buttonName} </button>
+  return <button className={cssClass} onClick={applyFormat}> <span>{buttonName}</span></button>
 }
 
 export default BlockBlot

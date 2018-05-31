@@ -17,7 +17,7 @@ class __imageBlot extends Embed {
     attr.alt = value.alt
     node.setAttribute('alt', value.alt)
     attr.src = value.url
-    node.setAttribute('src', value.url)
+    node.setAttribute('src', value.src)
     attr.id = value.id
     node.setAttribute('id', value.id)
 
@@ -45,10 +45,12 @@ class __imageBlot extends Embed {
   }
     
   static value(node) {
+    debugger
     return JSON.parse(node.getAttribute('data-attrs'))
   }
 
   format(name, value) {
+    debugger
     const allowedStyleProps = ['width', 'margin']
     const otherAllowedAttrs = ['alt', 'src', 'id']
     const enum_margins = {
@@ -123,7 +125,7 @@ const ImageBlot = ({invokeTooltip}) => {
     quill.insertEmbed(range.index, 'image', {
       id: uniqueImgId,
       alt: 'Quill Cloud',
-      url: url || 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
+      src: url || 'http://v-georgia.com/wp-content/uploads/2016/03/paraplan4-858x503.jpg',
       style: {
           width: width || '50',
           height: width || '50',
@@ -152,7 +154,7 @@ const ImageBlot = ({invokeTooltip}) => {
       }
     })
   }}>
-    Image
+    <i className='material-icons'>image</i>
   </button>
 }
 

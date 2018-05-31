@@ -67,7 +67,7 @@ const VideoBlot = ({ blotName, tagName, formatName }) => {
     quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
    }}>
-      Video
+      <i className='material-icons'>ondemand_video</i>
   </button>
 
 }

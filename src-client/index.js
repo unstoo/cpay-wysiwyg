@@ -73,6 +73,11 @@ const quillInit = () => {
     modules: {
       keyboard: {
         bindings: bindings
+      },
+      clipboard: {
+        matchers: [
+          ['img', (x,y,z) => { debugger; return y}]
+        ]
       }
     }
   })

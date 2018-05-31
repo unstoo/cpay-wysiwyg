@@ -16,7 +16,7 @@ quill.insertText(range.index, '\n', Quill.sources.USER);
 quill.insertEmbed(range.index + 1, 'divider', true, Quill.sources.USER);
 quill.setSelection(range.index + 2, Quill.sources.SILENT);
 }}>
-{'-'}
+<i className='material-icons'>remove</i>
 </button>
 }
 

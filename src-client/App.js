@@ -102,20 +102,20 @@ class App extends React.Component {
     return <div className='container'>
     <div className='controls-container'>
       <div className='toggler-wrapper'>
-          <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
-          <button className='toggler  toggler--preview' onClick={new Function()}>Prev</button>
-          <button className='toggler  toggler--export-html' onClick={() => {
-            console.log(quill.root.innerHTML)
-            const field = document.getElementById('html-code')
-            field.value = quill.root.innerHTML
-            field.select()
-            document.execCommand('copy')
-            field.blur()
+        <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
+        <button className='toggler  toggler--preview' onClick={new Function()}>Prev</button>
+        <button className='toggler  toggler--export-html' onClick={() => {
+          console.log(quill.root.innerHTML)
+          const field = document.getElementById('html-code')
+          field.value = quill.root.innerHTML
+          field.select()
+          document.execCommand('copy')
+          field.blur()
 
-          }}>
-            Copy HTML Code
-          </button>
-          <input type='text' id='html-code'/>
+        }}>
+          Copy HTML Code
+        </button>
+        <input type='text' id='html-code'/>
       </div>
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>

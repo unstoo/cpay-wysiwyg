@@ -54,7 +54,7 @@ class LinkBlot extends React.Component {
       }
       
     }}>
-      Link
+      <i className='material-icons'>insert_link</i> 
     </button>
   }
 }

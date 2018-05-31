@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InlineBlot = ({ buttonName, formatName }) => {
+const InlineBlot = ({ buttonName, formatName, buttonIcon }) => {
 
   const applyFormat = (e, format = formatName) => {
     const appliedFormats = quill.getFormat()
@@ -12,7 +12,8 @@ const InlineBlot = ({ buttonName, formatName }) => {
   }
 
   return <button onClick={applyFormat}>
-    {buttonName}
+    { buttonIcon && <i className='material-icons'>{buttonIcon}</i> 
+    || buttonName }
   </button>
 }
 

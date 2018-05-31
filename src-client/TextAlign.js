@@ -30,7 +30,11 @@ const TextAlign = () => {
   }    
     
   return <select onChange={applyFormat}>
-    { ['left', 'center', 'right'].map(item => <option value={item} key={item}>{item}</option>) }
+    { 
+      ['left', 'center', 'right'].map(item => <option value={item} key={item}>
+        <i className='material-icons'>{`format_align_${item}`}</i>
+      </option>) 
+    }
   </select>
 }
 
