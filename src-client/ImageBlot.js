@@ -11,12 +11,13 @@ class __imageBlot extends Embed {
   }
 
   static create(value) {
+    debugger
     let node = super.create()
     let attr = {}
     node.setAttribute('data-tooltip', 'image')
     attr.alt = value.alt
     node.setAttribute('alt', value.alt)
-    attr.src = value.url
+    attr.src = value.src
     node.setAttribute('src', value.src)
     attr.id = value.id
     node.setAttribute('id', value.id)

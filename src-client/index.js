@@ -76,7 +76,7 @@ const quillInit = () => {
       },
       clipboard: {
         matchers: [
-          ['img', (x,y,z) => { debugger; return y}]
+          ['img', (x,y) => { debugger; return y}]
         ]
       }
     }
