@@ -77,16 +77,11 @@ const quillInit = () => {
       },
       clipboard: {
         matchers: [
-          ['img', (x,y) => { return y}]
+          ['img', (x, y) => { return y }]
         ]
       }
     }
   })
 }
-
-  
-  
-  // Снимать блочные тэги (например h1, h2) при переносе строки в редакторе. Исключение - <ul>.
-  // document.getElementById('editor').addEventListener('
 
 quillInit()

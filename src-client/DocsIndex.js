@@ -1,68 +1,102 @@
 import React from 'react'
 
-const DocsIndex = ({articles, categories}) => {
+class DocsIndex extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      areCategoryArticlesUnfolded: {}
+    }
 
-const topCategories = []
-const subCategories = {}
-const articlesByCategory = {}
-
-// Group articled by category id.
-articles.forEach(a => {
-  if (a.category_id === '') return
-
-  if (!articlesByCategory[a.category_id]) {
-    articlesByCategory[a.category_id] = []
+    this.toogleArticlesList = this.toogleArticlesList.bind(this)
   }
 
-  articlesByCategory[a.category_id].push(a)
-})
+  toogleArticlesList({target}) {
+      // category_id
+      const {id} = target
+      this.setState((prevState, props) => {
 
-// Group parent categories and child categories.
-categories.forEach(c => {
-  if (!c.title) return
+        if (!prevState.areCategoryArticlesUnfolded[id]) {
+          prevState.areCategoryArticlesUnfolded[id] = true
+          return prevState
+        } else {
+          prevState.areCategoryArticlesUnfolded[id] = false
+          return prevState
+        }
 
-  const parent_id = c.parent_category_id
-
-  if (parent_id === '') { 
-    topCategories.push(c)
-    return
+      })
   }
 
-  if (!subCategories[parent_id]) {
-    subCategories[parent_id] = []
-  }
-  
-  subCategories[parent_id].push(c)
-})
+  render() {
+    const topCategories = []
+    const subCategories = {}
+    const articlesByCategory = {}
+    const {articles, categories} = this.props
 
-  return (
-    <ul>
-      { topCategories.map(c => {
-        return <li key={ c.category_id }>
-          <span><b>{ c.title }</b></span>
-          <Articles articles={articlesByCategory[c.category_id]}/>
-          {
-            subCategories[c.category_id] &&
-            <ul>
-              { 
-                subCategories[c.category_id].map(subC => {
-                  return <li key={subC.category_id}><b>{ subC.title }</b>
-                    <Articles articles={articlesByCategory[subC.category_id]}/>
-                  </li>
-                }) 
-              }
-            </ul> 
-          }
-        </li>
-      })}
-    </ul>
-  )
+    // Group articled by category id.
+    articles.forEach(a => {
+      if (a.category_id === '') return
+
+      if (!articlesByCategory[a.category_id]) {
+        articlesByCategory[a.category_id] = []
+      }
+
+      articlesByCategory[a.category_id].push(a)
+    })  
+
+    // Group parent categories and child categories.
+    categories.forEach(c => {
+      if (!c.title) return
+
+      const parent_id = c.parent_category_id
+
+      if (parent_id === '') { 
+        topCategories.push(c)
+        return
+      }
+
+      if (!subCategories[parent_id]) {
+        subCategories[parent_id] = []
+      }
+      
+      subCategories[parent_id].push(c)
+    })
+
+    console.log('list')
+    return (
+      <ul>
+        { topCategories.map(c => {
+          return <li key={ c.category_id }>
+            <b><span onClick={this.toogleArticlesList} id={ c.category_id }>{ c.title }</span></b>
+            <Articles 
+              articles={articlesByCategory[c.category_id]} 
+              isUnfolded={this.state.areCategoryArticlesUnfolded[c.category_id]}
+            />
+
+            { subCategories[c.category_id] &&
+              <ul>
+                { subCategories[c.category_id].map(subC => {
+                    return <li key={ subC.category_id }>
+                      <b><span onClick={this.toogleArticlesList} id={ subC.category_id }>
+                        { subC.title }
+                      </span></b>
+                      <Articles 
+                        articles={ articlesByCategory[subC.category_id] }
+                        isUnfolded = { this.state.areCategoryArticlesUnfolded[subC.category_id]}
+                      />
+                    </li>
+                })}
+              </ul> 
+            }
+          </li>
+        })}
+      </ul>
+    )
+  }
 }
 
-const Articles = ({ articles }) => {
-  if (!articles) {
-    return []
-  }
+const Articles = ({ articles, isUnfolded }) => {
+
+  if (!articles || !isUnfolded) return []
 
   return <ul>
     {articles.map(a => <li key={a.article_id}>{ a.title} 
@@ -73,10 +107,11 @@ const Articles = ({ articles }) => {
           return response.json();
         })
         .then(function(myJson) {
-          console.log(myJson);
           quill.clipboard.dangerouslyPasteHTML(myJson.article.body)
-        });
-      }}>dl</button>
+        })
+      }}>
+        Download
+      </button>
     </li>)}
   </ul>
 }
