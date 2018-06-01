@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import Quill from 'quill'
 import './styles.css'
+import hdocsApi from './hdocs-api'
 
 window.Quill = Quill
 window.Delta = Quill.import('delta')
@@ -76,7 +77,7 @@ const quillInit = () => {
       },
       clipboard: {
         matchers: [
-          ['img', (x,y) => { debugger; return y}]
+          ['img', (x,y) => { return y}]
         ]
       }
     }

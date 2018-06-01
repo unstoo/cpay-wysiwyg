@@ -11,10 +11,27 @@ class __imageBlot extends Embed {
   }
 
   static create(value) {
-    debugger
     let node = super.create()
     let attr = {}
+
     node.setAttribute('data-tooltip', 'image')
+
+    // Image came from an external source.
+    if (value.includes('http')) {
+      node.setAttribute('src', value)
+      attr.src = value
+      let composedStyle = ''
+      attr.style = {}
+      attr.style.width = 100
+      composedStyle += `width: 100%; height: 100%;`
+      attr.style.margin = 'center'
+      composedStyle += `margin: ${this.enum_margins[ 'center' ]};`
+      node.setAttribute('style', composedStyle)
+      node.setAttribute('data-attrs', JSON.stringify(attr))  
+      return node
+    }
+
+    
     attr.alt = value.alt
     node.setAttribute('alt', value.alt)
     attr.src = value.src
@@ -46,12 +63,20 @@ class __imageBlot extends Embed {
   }
     
   static value(node) {
-    debugger
-    return JSON.parse(node.getAttribute('data-attrs'))
+    const imageAddedThroughThisApp = JSON.parse(node.getAttribute('data-attrs'))
+    if (imageAddedThroughThisApp) return imageAddedThroughThisApp
+    
+    return {
+      alt: node.getAttribute('alt'),
+      src: node.getAttribute('href'),
+      style: {
+        margin: 'center'
+      }
+    }
   }
 
   format(name, value) {
-    debugger
+    
     const allowedStyleProps = ['width', 'margin']
     const otherAllowedAttrs = ['alt', 'src', 'id']
     const enum_margins = {
@@ -60,7 +85,8 @@ class __imageBlot extends Embed {
       CENTER: '0 auto'
     }
 
-    let attrs = JSON.parse(this.domNode.getAttribute('data-attrs')) 
+    let attrs = JSON.parse(this.domNode.getAttribute('data-attrs'))
+    
 
     if (otherAllowedAttrs.includes(name)) {
       attrs[name] = value
@@ -88,8 +114,8 @@ class __imageBlot extends Embed {
     attrs = JSON.parse(attrs)
       
     if (allowedAttrs.includes(name) === -1) return undefined
-    if (attrs[name]) return attrs[name]
-    if (attrs.style[name]) return attrs.style[name]
+    if (attrs && attrs[name]) return attrs[name]
+    if (attrs && attrs.style[name]) return attrs.style[name]
 
     return undefined
   }

@@ -6,6 +6,7 @@ import Toolbar from './Toolbar'
 import ModalTooltip from './ModalTooltip'
 import TooltipField from './TooltipField'
 import TooltipButton from './TooltipButton'
+import DocsIndex from './DocsIndex'
 setConfig({ logLevel: 'debug' })
 
 class App extends React.Component { 
@@ -88,7 +89,7 @@ class App extends React.Component {
 
   keys(e) {
     if (e.key === 'Enter') {
-      const cursorPosition = (quill.getSelection()).index
+      const cursorPosition = (quill.getSelection()).DocsIndex
       
       const activeFormats = (quill.getFormat())
 
@@ -100,6 +101,7 @@ class App extends React.Component {
 
   render() {
     return <div className='container'>
+    <div style={{height: '80px'}}></div>
     <div className='controls-container'>
       <div className='toggler-wrapper'>
         <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
@@ -130,8 +132,10 @@ class App extends React.Component {
       </div>
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>
-
-      <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
+    <div id="docs-index">
+      <DocsIndex categories={window.categories.categories} articles={window.articles.articles}/>
+    </div>
+    <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 
       { this.state.isTooltipVisible &&
         <ModalTooltip 
