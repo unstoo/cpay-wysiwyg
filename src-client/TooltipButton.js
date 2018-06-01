@@ -1,11 +1,9 @@
 import React from 'react'
 
-const TooltipButton = (props) => {
-  return <button
-  onClick={e => {
-      props.parentListener(props.position)
-  }}>
-      { props.children }
+const TooltipButton = ({parentListener, position, children}) => {
+  
+  return <button onClick={e => void parentListener(position)}>
+    { children }
   </button>
 }
 

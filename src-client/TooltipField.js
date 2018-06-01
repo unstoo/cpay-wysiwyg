@@ -1,14 +1,14 @@
 import React from 'react'
 
-const TooltipField = (props) => {
-  const handler = e => {
-    props.parentListener(e.target.value)
-  }
+const TooltipField = ({ parentListener, type, currentValue }) => {
+
+  const handler = e => void parentListener(e.target.value)
   
   return <input 
-    type={ props.type || 'number' } 
-    value={ props.currentValue || '' }
-    onChange={handler}/>
+    type={ type || 'number' } 
+    value={ currentValue || '' }
+    onChange={ handler }
+  />
 }
 
 export default TooltipField

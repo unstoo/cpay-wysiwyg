@@ -18,7 +18,7 @@ Quill.register({
 const TextAlign = () => {
 
   const applyFormat = (e, formatName = 'align') => {     
-    const selectedSize = e.target.value
+    const selectedSize = e.target.dataset.format
     const appliedFormats = quill.getFormat();
     
     if (! appliedFormats.formatName || appliedFormats.formatName !== selectedSize) {
@@ -29,13 +29,14 @@ const TextAlign = () => {
     }
   }    
     
-  return <select onChange={applyFormat}>
+  return <div onClick={applyFormat}>
     { 
-      ['left', 'center', 'right'].map(item => <option value={item} key={item}>
-        <i className='material-icons'>{`format_align_${item}`}</i>
-      </option>) 
+      ['left', 'center', 'right']
+      .map(item => <button value={item} key={item}>
+        <i className='material-icons' data-format={item}>{`format_align_${item}`}</i>
+      </button>) 
     }
-  </select>
+  </div>
 }
 
 export default TextAlign
