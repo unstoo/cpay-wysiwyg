@@ -77,7 +77,18 @@ const quillInit = () => {
       },
       clipboard: {
         matchers: [
-          ['img', (x, y) => { return y }]
+          ['img', (node, delta) => { return delta }]
+        ],
+        matchers: [
+          ['div', (node, delta) => { if (node.getAttribute('class') === 'ql-cpay-button-container') {
+            debugger
+            const newDelta = new Delta().retain(delta.length(), {
+              buttonContainer: true
+            }).insert('\n')
+            return delta.compose(newDelta)
+          } else {
+            return delta
+          } }]
         ]
       }
     }

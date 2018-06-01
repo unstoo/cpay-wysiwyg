@@ -29,6 +29,7 @@ class App extends React.Component {
   }
 
   monitorsClicksOnTooltipableBlots(e) {
+    
     e.preventDefault()
     let aBlot = null
     let tooltipType = ''
@@ -51,7 +52,7 @@ class App extends React.Component {
       this.setState({
         selectedBlot: aBlot,
         isTooltipVisible: true,
-        tooltip: { x: e.clientX, y: e.clientY + 10 },
+        tooltip: { x: e.pageX, y: e.pageY + 16 },
         tooltipType: tooltipType
       }) 
     } else {
@@ -101,7 +102,7 @@ class App extends React.Component {
 
   render() {
     return <div className='container'>
-    <div style={{height: '80px'}}></div>
+    {/* <div style={{height: '80px'}}></div> */}
     <div className='controls-container'>
       <div className='toggler-wrapper'>
         <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
@@ -132,7 +133,7 @@ class App extends React.Component {
       </div>
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>
-    <div id="docs-index">
+    <div id="docs-index" className="docs-index">
       <DocsIndex categories={window.categories.categories} articles={window.articles.articles}/>
     </div>
     <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
