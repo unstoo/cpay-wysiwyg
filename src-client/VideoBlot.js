@@ -16,7 +16,7 @@ class __videoBlot extends Embed {
     node.setAttribute('frameborder', '0')
     node.setAttribute('allowfullscreen', true)
     // An iframe exported from Helpdocs.
-    if (value.includes('www')) {
+    if (value.includes && value.includes('www')) {
       node.setAttribute('src', 'https://'+value)
       return node
     }

@@ -19,13 +19,17 @@ class App extends React.Component {
       tooltip: { x: 0, y: 0 },
       tooltipType: false,
       isToolbarVisible: true,
-      articlePreviewMode: false
+      articlePreviewMode: false,
+      selectedArticleTitile: '',
+      selectedArticleId: ''
+
     }    
 
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
     this.monitorsClicksOnTooltipableBlots = this.monitorsClicksOnTooltipableBlots.bind(this)
     this.tooltipTerminator = window.tooltipTerminator = this.tooltipTerminator.bind(this)
     this.invokeTooltip = this.invokeTooltip.bind(this)
+    this.setArticleTitle = this.setArticleTitle.bind(this)
   }
 
   monitorsClicksOnTooltipableBlots(e) {
@@ -79,12 +83,19 @@ class App extends React.Component {
   }
 
   invokeTooltip({ tooltip, tooltipType, aBlot}) {
-   
     this.setState({ 
       selectedBlot: aBlot,
       isTooltipVisible: true,
       tooltip,
       tooltipType
+    })
+  }
+
+  setArticleTitle({ article }) {
+    const { article_id, title } = article
+    this.setState({
+      selectedArticleTitile: title,
+      selectedArticleId: article_id
     })
   }
 
@@ -134,7 +145,32 @@ class App extends React.Component {
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>
     <div id="docs-index" className="docs-index">
-      <DocsIndex categories={window.categories.categories} articles={window.articles.articles}/>
+      <DocsIndex
+        categories={window.categories.categories} 
+        articles={window.articles.articles}
+        callbackWhenArticleSelected={this.setArticleTitle}
+      />
+    </div>
+    <div id='article-title' className='article-title'>
+      <h1 contentEditable='true'>{ this.state.selectedArticleTitile || 'A title'}</h1>
+      <button type='button' onClick={ (e => {
+        
+        const data = {
+          title: document.getElementById('article-title').querySelectorAll('h1')[0].innerText
+        }
+
+        fetch(`https://api.helpdocs.io/v1/article/${this.state.selectedArticleId}?key=${localStorage.k}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+      }).bind(this)}>Save title</button>
     </div>
     <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 

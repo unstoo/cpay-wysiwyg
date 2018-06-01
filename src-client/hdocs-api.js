@@ -1,7 +1,8 @@
-import { helpdocs } from './k'
-
 
 const apiBase = 'https://api.helpdocs.io/v1/'
+const ARTICLES = '/article',
+  CATEGORIES = '/category',
+  AN_ARTICLE = id => `/article/${id}`
 
 const hdocsApi = {
   article: {

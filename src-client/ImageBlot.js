@@ -17,7 +17,7 @@ class __imageBlot extends Embed {
     node.setAttribute('data-tooltip', 'image')
 
     // Image came from an external source.
-    if (value.includes('http')) {
+    if (value.includes && value.includes('http')) {
       node.setAttribute('src', value)
       attr.src = value
       let composedStyle = ''

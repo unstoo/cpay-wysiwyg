@@ -81,7 +81,6 @@ const quillInit = () => {
         ],
         matchers: [
           ['div', (node, delta) => { if (node.getAttribute('class') === 'ql-cpay-button-container') {
-            debugger
             const newDelta = new Delta().retain(delta.length(), {
               buttonContainer: true
             }).insert('\n')

@@ -30,7 +30,8 @@ class DocsIndex extends React.Component {
     const topCategories = []
     const subCategories = {}
     const articlesByCategory = {}
-    const {articles, categories} = this.props
+    const {articles, categories, callbackWhenArticleSelected} = this.props
+    
 
     // Group articled by category id.
     articles.forEach(a => {
@@ -67,7 +68,8 @@ class DocsIndex extends React.Component {
         { topCategories.map(c => {
           return <li key={ c.category_id }>
             <b><span onClick={this.toogleArticlesList} id={ c.category_id }>{ c.title }</span></b>
-            <Articles 
+            <Articles
+              callbackWhenArticleSelected={callbackWhenArticleSelected}
               articles={articlesByCategory[c.category_id]} 
               isUnfolded={this.state.areCategoryArticlesUnfolded[c.category_id]}
             />
@@ -79,7 +81,8 @@ class DocsIndex extends React.Component {
                       <b><span onClick={this.toogleArticlesList} id={ subC.category_id }>
                         { subC.title }
                       </span></b>
-                      <Articles 
+                      <Articles
+                        callbackWhenArticleSelected={callbackWhenArticleSelected}
                         articles={ articlesByCategory[subC.category_id] }
                         isUnfolded = { this.state.areCategoryArticlesUnfolded[subC.category_id]}
                       />
@@ -94,24 +97,27 @@ class DocsIndex extends React.Component {
   }
 }
 
-const Articles = ({ articles, isUnfolded }) => {
+const Articles = ({ articles, isUnfolded, callbackWhenArticleSelected }) => {
 
   if (!articles || !isUnfolded) return []
 
   return <ul>
     {articles.map(a => <li key={a.article_id}>{ a.title} 
       { a.is_published ? '__ published' : '__ draft' }
-      <button onClick={() => {
+
+      <button onClick={(e, callback = callbackWhenArticleSelected) => {
         fetch(`https://api.helpdocs.io/v1/article/${a.article_id}?key=${localStorage.k}`)
         .then(function(response) {
           return response.json();
         })
         .then(function(myJson) {
+          callbackWhenArticleSelected(myJson)
           quill.clipboard.dangerouslyPasteHTML(myJson.article.body)
         })
       }}>
         Download
       </button>
+
     </li>)}
   </ul>
 }
