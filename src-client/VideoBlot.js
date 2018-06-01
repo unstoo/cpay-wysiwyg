@@ -10,20 +10,28 @@ const ATTRIBUTES = [
 
 class __videoBlot extends Embed {
   static create(value) {
-    let node = super.create(value);
-    node.setAttribute('frameborder', '0');
-    node.setAttribute('allowfullscreen', true);
-    node.setAttribute('src', value.src);
-    return node;
+    
+    let node = super.create(value)
+
+    node.setAttribute('frameborder', '0')
+    node.setAttribute('allowfullscreen', true)
+    // An iframe exported from Helpdocs.
+    if (value.includes('www')) {
+      node.setAttribute('src', 'https://'+value)
+      return node
+    }
+
+    node.setAttribute('src', value.src)
+    return node
   }
 
   static formats(domNode) {
     return ATTRIBUTES.reduce(function(formats, attribute) {
       if (domNode.hasAttribute(attribute)) {
-        formats[attribute] = domNode.getAttribute(attribute);
+        formats[attribute] = domNode.getAttribute(attribute)
       }
-      return formats;
-    }, {});
+      return formats
+    }, {})
   }
 
 
