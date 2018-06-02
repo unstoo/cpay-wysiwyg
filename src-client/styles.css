@@ -20,6 +20,18 @@ body {
     letter-spacing: normal;
     text-align: left;
 }
+.chip {
+  display: inline-block;
+  height: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.7);
+  line-height: 24px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background-color: #e4e4e4;
+  margin: 5px;
+}
 
 .toolbar {
   display: flex;
@@ -236,5 +248,19 @@ img {
 }
 
 .docs-index {
-  margin-right: auto;
+  position: relative;
+  left: -2300px;
+  height: 0;
+}
+
+.docs-index--active {
+  position: relative;
+  left: 0;
+  height: auto;
+}
+
+.article-item {
+  margin-bottom: 5px;
+  margin-left: -25px;
+  list-style-type: none;
 }

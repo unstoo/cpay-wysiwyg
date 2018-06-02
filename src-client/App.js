@@ -116,11 +116,8 @@ class App extends React.Component {
     {/* <div style={{height: '80px'}}></div> */}
     <div className='controls-container'>
       <div className='toggler-wrapper'>
-        <button className='toggler  toggler--toolbar' onClick={new Function()}>Tbar</button>
-        <button className='toggler  toggler--preview' onClick={new Function()}>Prev</button>
 
         <button className='toggler  toggler--export-html' onClick={() => {
-          console.log(quill.root.innerHTML)
           const field = document.getElementById('html-code-export')
           field.value = quill.root.innerHTML
           field.select()
@@ -144,16 +141,17 @@ class App extends React.Component {
       </div>
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>
-    <div id="docs-index" className="docs-index">
+    
       <DocsIndex
         categories={window.categories.categories} 
         articles={window.articles.articles}
         callbackWhenArticleSelected={this.setArticleTitle}
       />
-    </div>
     <div id='article-title' className='article-title'>
       <h1 contentEditable='true'>{ this.state.selectedArticleTitile || 'A title'}</h1>
-      <button type='button' onClick={ (e => {
+    </div>
+    <div className='article-controls'>
+    <button type='button' onClick={ (e => {
         
         const data = {
           title: document.getElementById('article-title').querySelectorAll('h1')[0].innerText
@@ -171,6 +169,25 @@ class App extends React.Component {
         .then(response => console.log('Success:', response));
 
       }).bind(this)}>Save title</button>
+
+      <button type='button' onClick={ (e => {
+        
+        const data = {
+          body: quill.root.innerHTML
+        }
+
+        fetch(`https://api.helpdocs.io/v1/article/${this.state.selectedArticleId}?key=${localStorage.k}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+      }).bind(this)}>Save updated article</button>
     </div>
     <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 
