@@ -30,16 +30,19 @@ const CreateArticleModal = ({ categories, onModalClosure }) => {
     bottom: 0,
     background: 'white',
     display: 'flex',
-    justifyContent: 'center'
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 
+  let selectedCategoryId = 'da'
+  let title = 'net'
+
   return <div style={style}>
-    <h1>Category of new article</h1>
+    <label>Category of new article
     <select onChange={(e) => {
-      //TODO: Filter selection of ICO, Mobile Apps Category
-      const selectedCategoryId = e.target[e.target.selectedIndex].id
+      selectedCategoryId = e.target[e.target.selectedIndex].id
       console.log(selectedCategoryId)
-      onModalClosure(selectedCategoryId)
     }}>
       { topCategories.map(c => {
         const categoryAndItsSubCategories = []
@@ -53,6 +56,21 @@ const CreateArticleModal = ({ categories, onModalClosure }) => {
         return categoryAndItsSubCategories
       })}
     </select>
+    </label>
+    <br/>
+    <label>
+      New article title
+      <input type='text' onChange={(e) => {
+        title = e.target.value
+      }}/>
+    </label>
+    <br/>
+    <button type='button' onClick={(e) => {
+      //TODO: Filter selection of ICO, Mobile Apps Category
+      onModalClosure(selectedCategoryId, title)
+    }}>
+      Create new article
+    </button>
   </div>
 }
 

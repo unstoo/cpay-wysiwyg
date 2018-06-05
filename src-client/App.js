@@ -101,12 +101,12 @@ class App extends React.Component {
     })
   }
 
-  async createArticle(category_id){
+  async createArticle(category_id, title){
     if (!category_id) {
       return console.error('category_id is missing')
     }
     //TODO: load spinner
-    const data = { category_id }
+    const data = { category_id, title }
 
     const response = await fetch(`https://api.helpdocs.io/v1/article?key=${localStorage.k}`, {
           method: 'POST',
