@@ -1,6 +1,6 @@
 import React from 'React'
 
-const CreateArticleModal = ({ categories, onModuleClosure }) => {
+const CreateArticleModal = ({ categories, onModalClosure }) => {
   const topCategories = []
   const subCategories = {}
 
@@ -39,7 +39,7 @@ const CreateArticleModal = ({ categories, onModuleClosure }) => {
       //TODO: Filter selection of ICO, Mobile Apps Category
       const selectedCategoryId = e.target[e.target.selectedIndex].id
       console.log(selectedCategoryId)
-      onModuleClosure(selectedCategoryId)
+      onModalClosure(selectedCategoryId)
     }}>
       { topCategories.map(c => {
         const categoryAndItsSubCategories = []

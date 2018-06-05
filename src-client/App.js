@@ -31,6 +31,7 @@ class App extends React.Component {
     this.tooltipTerminator = window.tooltipTerminator = this.tooltipTerminator.bind(this)
     this.invokeTooltip = this.invokeTooltip.bind(this)
     this.setArticleTitle = this.setArticleTitle.bind(this)
+    this.createArticle = this.createArticle.bind(this)
   }
 
   monitorsClicksOnTooltipableBlots(e) {
@@ -100,9 +101,32 @@ class App extends React.Component {
     })
   }
 
-  createArticle(){
-    // show modal
-    // then remove current article (if any)
+  async createArticle(category_id){
+    if (!category_id) {
+      return console.error('category_id is missing')
+    }
+    //TODO: load spinner
+    const data = { category_id }
+
+    const response = await fetch(`https://api.helpdocs.io/v1/article?key=${localStorage.k}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+    const { article } = await response.json()
+
+    this.setState({
+      showCreateArticleModal: false,
+      selectedArticleId: article.article_id,
+      selectedArticleTitile: article.title
+    })
+
+    quill.clipboard.dangerouslyPasteHTML(article.body)
+
+    //TODO: hide spinner
     
   }
 
@@ -120,7 +144,6 @@ class App extends React.Component {
 
   render() {
     return <div className='container'>
-    {/* <div style={{height: '80px'}}></div> */}
     <div className='controls-container'>
       <div className='toggler-wrapper'>
 
@@ -143,9 +166,9 @@ class App extends React.Component {
         }}>
           Paste HTML in
         </button>
-
         <input type='text' id='html-code-import'/>
       </div>
+
       { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
     </div>
     
