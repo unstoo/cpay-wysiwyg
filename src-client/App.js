@@ -7,6 +7,7 @@ import ModalTooltip from './ModalTooltip'
 import TooltipField from './TooltipField'
 import TooltipButton from './TooltipButton'
 import DocsIndex from './DocsIndex'
+import CreateArticleModal from './CreateArticleModal'
 setConfig({ logLevel: 'debug' })
 
 class App extends React.Component { 
@@ -21,8 +22,8 @@ class App extends React.Component {
       isToolbarVisible: true,
       articlePreviewMode: false,
       selectedArticleTitile: '',
-      selectedArticleId: ''
-
+      selectedArticleId: '',
+      showCreateArticleModal: false
     }    
 
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
@@ -99,6 +100,12 @@ class App extends React.Component {
     })
   }
 
+  createArticle(){
+    // show modal
+    // then remove current article (if any)
+    
+  }
+
   keys(e) {
     if (e.key === 'Enter') {
       const cursorPosition = (quill.getSelection()).DocsIndex
@@ -147,11 +154,26 @@ class App extends React.Component {
         articles={window.articles.articles}
         callbackWhenArticleSelected={this.setArticleTitle}
       />
+      
+      <button type='button' onClick={e => {
+        console.log('click');
+        
+        this.setState({
+          showCreateArticleModal: true
+        })
+      }}>
+        Create article
+      </button>
+
+      { this.state.showCreateArticleModal && 
+        <CreateArticleModal onModalClosure={this.createArticle} categories={window.categories.categories}/> }
+
     <div id='article-title' className='article-title'>
       <h1 contentEditable='true'>{ this.state.selectedArticleTitile || 'A title'}</h1>
     </div>
+
     <div className='article-controls'>
-    <button type='button' onClick={ (e => {
+      <button type='button' onClick={ (e => {
         
         const data = {
           title: document.getElementById('article-title').querySelectorAll('h1')[0].innerText
@@ -168,7 +190,9 @@ class App extends React.Component {
         .catch(error => console.error('Error:', error))
         .then(response => console.log('Success:', response));
 
-      }).bind(this)}>Save title</button>
+      }).bind(this)}>
+        Save title
+      </button>
 
       <button type='button' onClick={ (e => {
         
@@ -187,7 +211,9 @@ class App extends React.Component {
         .catch(error => console.error('Error:', error))
         .then(response => console.log('Success:', response));
 
-      }).bind(this)}>Save updated article</button>
+      }).bind(this)}>
+        Save article
+      </button>
     </div>
     <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
 

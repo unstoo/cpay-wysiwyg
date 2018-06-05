@@ -251,12 +251,14 @@ img {
   position: relative;
   left: -2300px;
   height: 0;
+  margin-right: auto;
 }
 
 .docs-index--active {
   position: relative;
   left: 0;
   height: auto;
+  margin-right: auto;
 }
 
 .article-item {

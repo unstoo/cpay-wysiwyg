@@ -71,10 +71,10 @@ class DocsIndex extends React.Component {
             return prevState
           })
         }}>
-          Load an article
+          Show articles
         </button>
 
-      <ul className={'docs-index' + (this.state.isDocsIndexUnfolded ? 'docs-index--active' : '')}>
+      <ul className={'docs-index' + (this.state.isDocsIndexUnfolded ? ' docs-index--active' : '')}>
         { topCategories.map(c => {
           return <li key={ c.category_id }>
             <b><span onClick={this.toogleArticlesList} id={ c.category_id }>{ c.title }</span></b>
