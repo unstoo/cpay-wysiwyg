@@ -35,7 +35,7 @@ const CreateArticleModal = ({ categories, onModalClosure }) => {
     alignItems: 'center'
   }
 
-  let selectedCategoryId = 'da'
+  let selectedCategoryId = topCategories[0].category_id
   let title = 'net'
 
   return <div style={style}>
@@ -59,7 +59,7 @@ const CreateArticleModal = ({ categories, onModalClosure }) => {
     </label>
     <br/>
     <label>
-      New article title
+      New article title 
       <input type='text' onChange={(e) => {
         title = e.target.value
       }}/>

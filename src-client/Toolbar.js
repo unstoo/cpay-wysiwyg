@@ -10,6 +10,7 @@ import TextAlign from './TextAlign'
 import List from './List'
 import VideoBlot from './VideoBlot'
 import ButtonBlot from './ButtonBlot'
+import Table from './TableBlot'
 
 const Toolbar = ({ invokeTooltip }) => {
   return <div className='toolbar'>
@@ -28,6 +29,7 @@ const Toolbar = ({ invokeTooltip }) => {
     <ClearFormats />
     <FontSize />
     <TextAlign />
+    <Table />
   </div>
 }
 
