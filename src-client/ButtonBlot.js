@@ -1,6 +1,12 @@
 import React from 'react'
-import Quill from 'quill'
-let Container = Quill.import('blots/container')
+// import Quill from 'quill'
+
+
+
+class ButtonBlot extends React.Component {
+  constructor(props) {
+    super(props)
+    let Container = Quill.import('blots/container')
 let Block = Quill.import('blots/block')
 let Parchment = Quill.import('parchment')
 
@@ -121,10 +127,7 @@ __buttonContainer.allowedChildren = [__button];
 __buttonContainer.className = 'ql-cpay-button-container'
 
 Quill.register(__buttonContainer)
-
-
-class ButtonBlot extends React.Component {
-
+  }
   render() {
   return <button onClick={() => { 
     let selection = quill.getSelection()

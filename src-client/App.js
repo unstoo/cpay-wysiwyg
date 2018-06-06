@@ -169,7 +169,7 @@ class App extends React.Component {
         <input type='text' id='html-code-import'/>
       </div>
 
-      { this.state.isToolbarVisible && <Toolbar invokeTooltip={this.invokeTooltip} /> }
+      { this.state.isToolbarVisible && <Toolbar Quill={this.props.Quill} invokeTooltip={this.invokeTooltip} /> }
     </div>
     
       <DocsIndex

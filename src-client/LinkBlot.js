@@ -1,42 +1,47 @@
 import React from 'react'
-import Quill from 'quill'
-let Inline = Quill.import('blots/inline')
+// import Quill from 'quill'
 
-class __linkBlot extends Inline {
-  static create(value) {
-    let node = super.create()
-
-    node.setAttribute('data-tooltip', 'link')
-    node.setAttribute('href', value)
-    node.setAttribute('target', '_blank')
-    return node;
-  }
-
-  static formats(node) {
-    return node.getAttribute('href')
-  }
-
-  format(name, value) {
-    if (value !== false) {
-      this.domNode.setAttribute(name, value)
-    } else {
-      super.format(name, value)
-    }
-
-  }
-
-  getFormat(name) {
-    return this.domNode.getAttribute(name)
-  }
-}
-
-__linkBlot.blotName = 'link'
-__linkBlot.tagName = 'a'
-__linkBlot.className = `ql-cpay-link`
-Quill.register(__linkBlot)
 
 class LinkBlot extends React.Component {
+    constructor(props) {
 
+      super(props)
+      let Inline = Quill.import('blots/inline')
+
+      class __linkBlot extends Inline {
+        static create(value) {
+          let node = super.create()
+
+          node.setAttribute('data-tooltip', 'link')
+          node.setAttribute('href', value)
+          node.setAttribute('target', '_blank')
+          return node;
+        }
+
+        static formats(node) {
+          return node.getAttribute('href')
+        }
+
+        format(name, value) {
+          if (value !== false) {
+            this.domNode.setAttribute(name, value)
+          } else {
+            super.format(name, value)
+          }
+
+        }
+
+        getFormat(name) {
+          return this.domNode.getAttribute(name)
+        }
+      }
+
+      __linkBlot.blotName = 'link'
+      __linkBlot.tagName = 'a'
+      __linkBlot.className = `ql-cpay-link`
+      Quill.register(__linkBlot)
+
+    }
   render() {
     return <button onClick={() => { 
       const selection = quill.getSelection()

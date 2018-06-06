@@ -1,20 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import Quill from 'quill'
+// import Quill from 'quill'
 import './styles.css'
 import hdocsApi from './hdocs-api'
 
-import Quillsrc from './vendor/quill'
+import Quill from './vendor/quill'
 
-window.Quill = Quillsrc
-window.Delta = Quillsrc.import('delta')
-window.Parchment = Quillsrc.import('parchment')
-window.Keyboard = Quillsrc.import('modules/keyboard')
+window.Quill = Quill
+window.Delta = Quill.import('delta')
+window.Parchment = Quill.import('parchment')
+window.Keyboard = Quill.import('modules/keyboard')
 
 const root = document.getElementById('root')
-ReactDOM.render(<App />, root)
-
+ReactDOM.render(<App Quill={Quill}/>, root)
 
 var bindings = {
   lol: {
@@ -72,7 +71,7 @@ var bindings = {
 }
 
 const quillInit = () => { 
-  window.quill = new Quillsrc('#editor', {
+  window.quill = new Quill('#editor', {
     modules: {
       keyboard: {
         bindings: bindings

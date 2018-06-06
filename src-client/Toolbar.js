@@ -12,11 +12,11 @@ import VideoBlot from './VideoBlot'
 import ButtonBlot from './ButtonBlot'
 import Table from './TableBlot'
 
-const Toolbar = ({ invokeTooltip }) => {
+const Toolbar = ({ invokeTooltip, Quill }) => {
   return <div className='toolbar'>
-    {/* <InlineBlot buttonName='Bold' formatName='bold' buttonIcon='format_bold' />
+    <InlineBlot buttonName='Bold' formatName='bold' buttonIcon='format_bold' />
     <InlineBlot buttonName='Italic' formatName='italic' buttonIcon='format_italic' />
-    <LinkBlot />
+    <LinkBlot Quill={Quill} />
     <ImageBlot invokeTooltip={invokeTooltip} />
     <VideoBlot />
     <InlineBlot buttonName='Quote' formatName='blockquote' buttonIcon='format_quote' />
@@ -28,7 +28,7 @@ const Toolbar = ({ invokeTooltip }) => {
 
     <ClearFormats />
     <FontSize />
-    <TextAlign /> */}
+    <TextAlign />
     <Table />
   </div>
 }
