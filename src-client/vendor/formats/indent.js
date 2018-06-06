@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from '../parchment/parchment';
 
 class IndentAttributor extends Parchment.Attributor.Class {
   add(node, value) {

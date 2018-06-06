@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from '../parchment/parchment';
 import Block from '../blots/block';
 import Container from '../blots/container';
 

@@ -1,4 +1,4 @@
-import Parchment from 'parchment';
+import Parchment from '../parchment/parchment';
 
 class ColorAttributor extends Parchment.Attributor.Style {
   value(domNode) {
