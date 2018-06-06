@@ -1,10 +1,10 @@
 import React from 'react'
-import Quill from 'quill'
+import Quill from './vendor/quill'
 let Embed = Quill.import('blots/block/embed')
 let Block = Quill.import('blots/block')
 let Container = Quill.import('blots/container')
 let Parchment = Quill.import('parchment')
-
+debugger
 class __divider extends Embed { }
 __divider.blotName =    'table'
 __divider.tagName =     'table'

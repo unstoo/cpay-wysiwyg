@@ -5,10 +5,12 @@ import Quill from 'quill'
 import './styles.css'
 import hdocsApi from './hdocs-api'
 
-window.Quill = Quill
-window.Delta = Quill.import('delta')
-window.Parchment = Quill.import('parchment')
-window.Keyboard = Quill.import('modules/keyboard')
+import Quillsrc from './vendor/quill'
+
+window.Quill = Quillsrc
+window.Delta = Quillsrc.import('delta')
+window.Parchment = Quillsrc.import('parchment')
+window.Keyboard = Quillsrc.import('modules/keyboard')
 
 const root = document.getElementById('root')
 ReactDOM.render(<App />, root)
@@ -70,7 +72,7 @@ var bindings = {
 }
 
 const quillInit = () => { 
-  window.quill = new Quill('#editor', {
+  window.quill = new Quillsrc('#editor', {
     modules: {
       keyboard: {
         bindings: bindings

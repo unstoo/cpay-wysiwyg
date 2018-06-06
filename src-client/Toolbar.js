@@ -14,7 +14,7 @@ import Table from './TableBlot'
 
 const Toolbar = ({ invokeTooltip }) => {
   return <div className='toolbar'>
-    <InlineBlot buttonName='Bold' formatName='bold' buttonIcon='format_bold' />
+    {/* <InlineBlot buttonName='Bold' formatName='bold' buttonIcon='format_bold' />
     <InlineBlot buttonName='Italic' formatName='italic' buttonIcon='format_italic' />
     <LinkBlot />
     <ImageBlot invokeTooltip={invokeTooltip} />
@@ -28,7 +28,7 @@ const Toolbar = ({ invokeTooltip }) => {
 
     <ClearFormats />
     <FontSize />
-    <TextAlign />
+    <TextAlign /> */}
     <Table />
   </div>
 }

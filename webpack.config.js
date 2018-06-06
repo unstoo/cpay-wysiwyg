@@ -1,7 +1,7 @@
 const path = require('path');
-  const HtmlWebpackPlugin = require('html-webpack-plugin');
-  const CleanWebpackPlugin = require('clean-webpack-plugin');
-  const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
   module.exports = {
     entry: {
@@ -18,13 +18,25 @@ const path = require('path');
     module: {
       rules: [ 
         {
-            exclude: /node_modules|packages/,
-            test: /\.js$/,
-            use: 'babel-loader',
+          test: /\.js$/,
+          exclude: /node_modules|packages/,
+          use: 'babel-loader',
         },
         {
-              test: /\.css$/,
-              use: ['style-loader', 'css-loader']
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.svg$/,
+          include: [
+            path.resolve(__dirname, './src-client/vendor/assets/icons')
+          ],
+          use: [{
+            loader: 'html-loader',
+            options: {
+              minimize: true
+            }
+          }]
         }
       ]
     },
