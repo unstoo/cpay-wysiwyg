@@ -191,9 +191,9 @@ class App extends React.Component {
       { this.state.showCreateArticleModal && 
         <CreateArticleModal onModalClosure={this.createArticle} categories={window.categories.categories}/> }
 
-    <div id='article-title' className='article-title'>
+    {/* <div id='article-title' className='article-title'>
       <h1 contentEditable='true'>{ this.state.selectedArticleTitile || 'A title'}</h1>
-    </div>
+    </div> */}
 
     <div className='article-controls'>
       <button type='button' onClick={ (e => {

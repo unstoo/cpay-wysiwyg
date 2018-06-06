@@ -3,7 +3,7 @@ import Delta from 'quill-delta';
 import Editor from './editor';
 import Emitter from './emitter';
 import Module from './module';
-import Parchment from 'parchment';
+import Parchment from '../parchment/parchment';
 import Selection, { Range } from './selection';
 import extend from 'extend';
 import logger from './logger';
