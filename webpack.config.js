@@ -15,12 +15,18 @@ const webpack = require('webpack');
       host: '0.0.0.0'
     },
     mode: 'development',
+    resolve: {
+      extensions: ['.js', '.ts'],
+    },
     module: {
       rules: [ 
         {
           test: /\.js$/,
           exclude: /node_modules|packages/,
           use: 'babel-loader',
+        },
+        { 
+          test: /\.ts$/, use: 'ts-loader'
         },
         {
           test: /\.css$/,
@@ -33,9 +39,7 @@ const webpack = require('webpack');
           ],
           use: [{
             loader: 'html-loader',
-            options: {
-              minimize: true
-            }
+            options: { minimize: true }
           }]
         }
       ]
