@@ -10,9 +10,14 @@ class TableBlot extends React.Component {
     let Parchment = Quill.import('parchment')
 
     class __cell extends Block {
+      constructor(domNode){
+        debugger
+        super(domNode)
+      }
+
       static create(value) {
-        let tagName = 'tr'
-        let node = super.create(tagName)
+        debugger
+        let node = super.create()
         return node
       }
 
@@ -67,13 +72,27 @@ class TableBlot extends React.Component {
     Quill.register(__cell)
 
     class __row extends Container {
+      constructor(domNode) {
+        debugger
+        super(domNode)
+        this.build()
+      }
+
       static create(value) {
+        debugger
         let tagName = 'tr'
         let node = super.create(tagName)
         return node
       }
 
+      build() {
+        debugger
+        super.build()
+        // this.statics.defaultChild
+      }
+
       static formats(domNode) {
+        debugger
         return domNode.tagName === this.tagName ? undefined : super.formats(domNode)
       }
     
@@ -97,15 +116,17 @@ class TableBlot extends React.Component {
       }
 
       replace(target) {
-      
+      debugger
         // target -- current selection in the ql editor window
         if (target.statics.blotName !== this.statics.blotName) {
           // if currently selected Blot type != 'buttonContainer'
           // create __button and move children from the Blot into the button
           let item = Parchment.create(this.statics.defaultChild);
+          let item2 = Parchment.create(this.statics.defaultChild);
           target.moveChildren(item);
           // append the button to the buttonContainer
           this.appendChild(item);
+          this.appendChild(item2);
         }
     
     
@@ -143,10 +164,31 @@ class TableBlot extends React.Component {
     Quill.register(__row)
   
   class __table extends Container {
+    constructor(domNode, value) {
+      debugger
+      super(domNode)
+      this.build()
+    }
 
     static create(value) {
-      let tagName = 'table'
-      let node = super.create(tagName);
+      debugger
+      let node = super.create();
+
+      let row1 = document.createElement('tr')
+      let row2 = document.createElement('tr')
+
+      let cell11 = document.createElement('td')
+      let cell12 = document.createElement('td')
+      row1.appendChild(cell11)
+      row1.appendChild(cell12)
+
+      let cell21 = document.createElement('td')
+      let cell22 = document.createElement('td')
+      row2.appendChild(cell21)
+      row2.appendChild(cell22)
+
+      node.appendChild(row1)
+      node.appendChild(row2)
       return node;
     }
 
@@ -157,6 +199,7 @@ class TableBlot extends React.Component {
     }
 
     formats() {
+      debugger
       return { table: true }
     }
 
@@ -172,16 +215,20 @@ class TableBlot extends React.Component {
     }
 
     optimize(context) {
-
+      // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
+      // this.appendChild(child)
+      // child.optimize(context)
+      // TODO: pass number of cells in row
+      // TODO: pass number of rows
       super.optimize(context);
       let next = this.next;
-      if (next != null && next.prev === this &&
-          next.statics.blotName === this.statics.blotName &&
-          next.domNode.tagName === this.domNode.tagName &&
-          next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
-        next.moveChildren(this);
-        next.remove();
-      }
+      // if (next != null && next.prev === this &&
+      //     next.statics.blotName === this.statics.blotName &&
+      //     next.domNode.tagName === this.domNode.tagName &&
+      //     next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
+      //   next.moveChildren(this);
+      //   next.remove();
+      // }
     }
 
     replace(target) {
@@ -202,8 +249,8 @@ class TableBlot extends React.Component {
   }
 
     __table.blotName = 'table';
-    __table.scope = Parchment.Scope.BLOCK_BLOT;
     __table.tagName = 'table';
+    __table.scope = Parchment.Scope.BLOCK_BLOT;
     __table.defaultChild = 'row';
     __table.allowedChildren = [__row];
     __table.className = 'ql-cpay-table'
@@ -217,7 +264,7 @@ class TableBlot extends React.Component {
       // if (selection.length === 0) return
         // quill.insertText(selection.index + selection.length, '\n')
         // quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
-        quill.insertEmbed(0, 'table', true)
+        quill.insertEmbed(0, 'table', [2,2])
       }}>
       <strong>Table</strong>
       </button>

@@ -25,27 +25,38 @@ class ShadowBlot implements Blot {
     if (this.tagName == null) {
       throw new Registry.ParchmentError('Blot definition missing tagName');
     }
+
     let node;
+
+    // if multiple tagNames can be used
     if (Array.isArray(this.tagName)) {
+
       if (typeof value === 'string') {
         value = value.toUpperCase();
+
+        // what's this?
         if (parseInt(value).toString() === value) {
           value = parseInt(value);
         }
       }
+
       if (typeof value === 'number') {
+        // Index of allowed tagName
         node = document.createElement(this.tagName[value - 1]);
       } else if (this.tagName.indexOf(value) > -1) {
         node = document.createElement(value);
       } else {
         node = document.createElement(this.tagName[0]);
       }
+    // if only a single tagName is applicable
     } else {
       node = document.createElement(this.tagName);
     }
+
     if (this.className) {
       node.classList.add(this.className);
     }
+    
     return node;
   }
 

@@ -266,3 +266,12 @@ img {
   margin-left: -25px;
   list-style-type: none;
 }
+
+.ql-cpay-table {
+  border-collapse: collapse;
+}
+
+.ql-cpay-table td {
+  border: solid 1px grey;
+  padding: 5px;
+}

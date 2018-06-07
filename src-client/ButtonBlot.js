@@ -135,7 +135,7 @@ class __buttonContainer extends Container {
 
 __buttonContainer.blotName = 'buttonContainer';
 __buttonContainer.scope = Parchment.Scope.BLOCK_BLOT;
-__buttonContainer.tagName = ['div', 'div'];
+__buttonContainer.tagName = 'div';
 __buttonContainer.defaultChild = 'button';
 __buttonContainer.allowedChildren = [__button];
 __buttonContainer.className = 'ql-cpay-button-container'

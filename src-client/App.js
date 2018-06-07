@@ -132,7 +132,7 @@ class App extends React.Component {
 
   keys(e) {
     if (e.key === 'Enter') {
-      const cursorPosition = (quill.getSelection()).DocsIndex
+      const cursorPosition = (quill.getSelection())
       
       const activeFormats = (quill.getFormat())
 

@@ -29,8 +29,8 @@ class ContainerBlot extends ShadowBlot implements Parent {
   build(): void {
     this.children = new LinkedList<Blot>();
     // Need to be reversed for if DOM nodes already in order
-    [].slice
-      .call(this.domNode.childNodes)
+    
+    [].slice.call(this.domNode.childNodes)
       .reverse()
       .forEach((node: Node) => {
         try {
@@ -137,14 +137,16 @@ class ContainerBlot extends ShadowBlot implements Parent {
 
   optimize(context: { [key: string]: any }) {
     super.optimize(context);
-    if (this.children.length === 0) {
-      if (this.statics.defaultChild != null) {
-        let child = Registry.create(this.statics.defaultChild);
-        this.appendChild(child);
-        child.optimize(context);
-      } else {
-        this.remove();
-      }
+
+    if (this.children.length !== 0) return;
+
+    if (this.statics.defaultChild != null) {
+      let child = Registry.create(this.statics.defaultChild);
+      this.appendChild(child);
+      child.optimize(context);
+
+    } else {
+      this.remove();
     }
   }
 
@@ -247,21 +249,25 @@ class ContainerBlot extends ShadowBlot implements Parent {
 
 function makeBlot(node: Node): Blot {
   let blot = Registry.find(node);
-  if (blot == null) {
-    try {
-      blot = Registry.create(node);
-    } catch (e) {
-      blot = Registry.create(Registry.Scope.INLINE);
-      [].slice.call(node.childNodes).forEach(function(child: Node) {
-        // @ts-ignore
-        blot.domNode.appendChild(child);
-      });
-      if (node.parentNode) {
-        node.parentNode.replaceChild(blot.domNode, node);
-      }
-      blot.attach();
+
+  if (blot != null) return blot;
+  
+  try {
+    blot = Registry.create(node);
+  } catch (e) {
+
+    blot = Registry.create(Registry.Scope.INLINE);
+    [].slice.call(node.childNodes).forEach(function(child: Node) {
+      // @ts-ignore
+      blot.domNode.appendChild(child);
+    });
+    if (node.parentNode) {
+      node.parentNode.replaceChild(blot.domNode, node);
     }
+    blot.attach();
   }
+  
+
   return blot;
 }
 
