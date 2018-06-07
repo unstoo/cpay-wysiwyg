@@ -21,7 +21,7 @@ class ImageBlot extends React.Component {
         node.setAttribute('data-tooltip', 'image')
     
         // Image came from an external source.
-        if (value.includes && value.includes('http')) {
+        if (value && value.includes && value.includes('http')) {
           node.setAttribute('src', value)
           attr.src = value
           let composedStyle = ''
@@ -34,6 +34,7 @@ class ImageBlot extends React.Component {
           node.setAttribute('data-attrs', JSON.stringify(attr))  
           return node
         }
+        
     
         
         attr.alt = value.alt

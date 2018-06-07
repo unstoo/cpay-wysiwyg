@@ -255,6 +255,7 @@ class Quill {
   }
 
   insertEmbed(index, embed, value, source = Quill.sources.API) {
+    
     return modify.call(this, () => {
       return this.editor.insertEmbed(index, embed, value);
     }, source, index);
@@ -429,12 +430,15 @@ function expandConfig(container, userConfig) {
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
+
   if (this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
     return new Delta();
   }
+
   let range = index == null ? null : this.getSelection();
   let oldDelta = this.editor.delta;
   let change = modifier();
+
   if (range != null) {
     if (index === true) index = range.index;
     if (shift == null) {
@@ -444,6 +448,7 @@ function modify(modifier, source, index, shift) {
     }
     this.setSelection(range, Emitter.sources.SILENT);
   }
+
   if (change.length() > 0) {
     let args = [Emitter.events.TEXT_CHANGE, change, oldDelta, source];
     this.emitter.emit(Emitter.events.EDITOR_CHANGE, ...args);
@@ -451,6 +456,7 @@ function modify(modifier, source, index, shift) {
       this.emitter.emit(...args);
     }
   }
+
   return change;
 }
 

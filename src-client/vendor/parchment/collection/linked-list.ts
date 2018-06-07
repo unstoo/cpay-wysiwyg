@@ -28,8 +28,11 @@ class LinkedList<T extends LinkedNode> {
 
   insertBefore(node: T | null, refNode: T | null): void {
     if (!node) return
+
     node.next = refNode;
+
     if (refNode != null) {
+      
       node.prev = refNode.prev;
       if (refNode.prev != null) {
         refNode.prev.next = node;
@@ -38,6 +41,7 @@ class LinkedList<T extends LinkedNode> {
       if (refNode === this.head) {
         this.head = node;
       }
+
     } else if (this.tail != null) {
       this.tail.next = node;
       node.prev = this.tail;
@@ -46,6 +50,7 @@ class LinkedList<T extends LinkedNode> {
       node.prev = null;
       this.head = this.tail = node;
     }
+
     this.length += 1;
   }
 

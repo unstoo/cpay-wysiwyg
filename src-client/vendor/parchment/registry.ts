@@ -46,10 +46,13 @@ export enum Scope {
 
 export function create(input: Node | string | Scope, value?: any): Blot {
   let match = query(input);
+
   if (match == null) {
     throw new ParchmentError(`Unable to create ${input} blot`);
   }
+
   let BlotClass = <BlotConstructor>match;
+  
   let node =
     // @ts-ignore
     input instanceof Node || input['nodeType'] === Node.TEXT_NODE ? input : BlotClass.create(value);

@@ -28,7 +28,9 @@ class __button extends Block {
   }
   
   format(name, value) {
-    if (name === __button.blotName && !value) {
+    if (name === __button.blotName && value === false) {
+      // replace __button with <p>
+      // perserving children if any
       this.replaceWith(Parchment.create(this.statics.scope))
     } else {
       // super.format(name, value)
@@ -46,12 +48,17 @@ class __button extends Block {
 
 
   replaceWith(name, value) {
+    // on Button deletion
+
     this.parent.isolate(this.offset(this.parent), this.length());
 
+    // if replacement Blot == buttonContainer
     if (name === this.parent.statics.blotName) {
       this.parent.replaceWith(name, value);
       return this;
     } else {
+      // Move buttonContainer children to buttonContainer parent
+      // and remove buttonContainer
       this.parent.unwrap();
       return super.replaceWith(name, value);
     }
@@ -110,11 +117,18 @@ class __buttonContainer extends Container {
   }
 
   replace(target) {
+    
+    // target -- current selection in the ql editor window
     if (target.statics.blotName !== this.statics.blotName) {
+      // if currently selected Blot type != 'buttonContainer'
+      // create __button and move children from the Blot into the button
       let item = Parchment.create(this.statics.defaultChild);
       target.moveChildren(item);
+      // append the button to the buttonContainer
       this.appendChild(item);
     }
+
+
     super.replace(target);
   }
 }

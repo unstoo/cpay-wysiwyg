@@ -97,13 +97,19 @@ class ShadowBlot implements Blot {
     if (this.parent != null) {
       this.parent.children.remove(this);
     }
+
     let refDomNode: Node | null = null;
+
     parentBlot.children.insertBefore(this, refBlot);
     if (refBlot != null) {
       refDomNode = refBlot.domNode;
     }
+
+    // if __button parent != __buttonContainer
+    // or __button.nextSibling isn't refNode
     if (this.domNode.parentNode != parentBlot.domNode ||
         this.domNode.nextSibling != refDomNode) {
+      // then insert __button into __buttonContainer
       parentBlot.domNode.insertBefore(this.domNode, refDomNode);
     }
     this.parent = parentBlot;
@@ -142,8 +148,11 @@ class ShadowBlot implements Blot {
   }
 
   replace(target: Blot): void {
+
     if (target.parent == null) return;
+    // insert self into the parent of the currently selected Blot in the editor
     target.parent.insertBefore(this, target.next);
+    // remove the currently selected Blot
     target.remove();
   }
 

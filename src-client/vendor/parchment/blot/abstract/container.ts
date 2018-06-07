@@ -112,16 +112,14 @@ class ContainerBlot extends ShadowBlot implements Parent {
   }
 
   insertBefore(childBlot: Blot, refBlot?: Blot): void {
-    if (
-      this.statics.allowedChildren != null &&
-      !this.statics.allowedChildren.some(function(child: Registry.BlotConstructor) {
+    // if allowedChildren exist && the childBlot is one of them
+    if (this.statics.allowedChildren != null 
+      && !this.statics.allowedChildren.some(function(child: Registry.BlotConstructor) {
         return childBlot instanceof child;
-      })
-    ) {
-      throw new Registry.ParchmentError(
-        `Cannot insert ${(<ShadowBlot>childBlot).statics.blotName} into ${this.statics.blotName}`,
-      );
+      })) {
+      throw new Registry.ParchmentError(`Cannot insert ${(<ShadowBlot>childBlot).statics.blotName} into ${this.statics.blotName}`,);
     }
+    // then insert the childBlot into parent-this
     childBlot.insertInto(this, refBlot);
   }
 
@@ -166,7 +164,9 @@ class ContainerBlot extends ShadowBlot implements Parent {
   }
 
   replace(target: Blot): void {
+    // if currently selected Blot in the editor is ContainerBlot
     if (target instanceof ContainerBlot) {
+      // then move children of selected Blot into the ContainerBlot
       target.moveChildren(this);
     }
     super.replace(target);
