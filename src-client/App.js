@@ -15,6 +15,8 @@ class App extends React.Component {
     super(props)
 
     this.state = {
+      articles: [],
+      categories: [],
       selectedBlot: null,
       isTooltipVisible: false,
       tooltip: { x: 0, y: 0 },
@@ -32,6 +34,33 @@ class App extends React.Component {
     this.invokeTooltip = this.invokeTooltip.bind(this)
     this.setArticleTitle = this.setArticleTitle.bind(this)
     this.createArticle = this.createArticle.bind(this)
+    this.dataLoaded = this.dataLoaded.bind(this)
+  }
+
+  componentDidMount() {
+    this._asyncRequest = fetch(`https://api.helpdocs.io/v1/category?key=${localStorage.k}`)
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error))
+      .then(this.dataLoaded)
+
+      this._asyncRequest = fetch(`https://api.helpdocs.io/v1/article?key=${localStorage.k}`)
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error))
+      .then(this.dataLoaded)
+  }
+
+  dataLoaded({categories, articles}) {
+    if (articles) {
+      this.setState({
+        articles 
+      })
+    }
+
+    if (categories) {
+      this.setState({
+        categories
+      })
+    }
   }
 
   monitorsClicksOnTooltipableBlots(e) {
@@ -173,8 +202,8 @@ class App extends React.Component {
     </div>
     
       <DocsIndex
-        categories={window.categories.categories} 
-        articles={window.articles.articles}
+        categories={this.state.categories} 
+        articles={this.state.articles}
         callbackWhenArticleSelected={this.setArticleTitle}
       />
       
@@ -189,7 +218,7 @@ class App extends React.Component {
       </button>
 
       { this.state.showCreateArticleModal && 
-        <CreateArticleModal onModalClosure={this.createArticle} categories={window.categories.categories}/> }
+        <CreateArticleModal onModalClosure={this.createArticle} categories={this.state.categories}/> }
 
     {/* <div id='article-title' className='article-title'>
       <h1 contentEditable='true'>{ this.state.selectedArticleTitile || 'A title'}</h1>

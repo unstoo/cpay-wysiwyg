@@ -68,7 +68,7 @@ class TableBlot extends React.Component {
     }
 
     __cell.blotName = 'cell'
-    __cell.tagName = 'td'
+    __cell.tagName = ['td', 'th']
     Quill.register(__cell)
 
     class __row extends Container {
