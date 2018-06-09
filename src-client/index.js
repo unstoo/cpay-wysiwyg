@@ -78,9 +78,6 @@ const quillInit = () => {
       },
       clipboard: {
         matchers: [
-          ['img', (node, delta) => { return delta }]
-        ],
-        matchers: [
           ['div', (node, delta) => { if (node.getAttribute('class') === 'ql-cpay-button-container') {
             const newDelta = new Delta().retain(delta.length(), {
               buttonContainer: true
@@ -88,9 +85,25 @@ const quillInit = () => {
             return delta.compose(newDelta)
           } else {
             return delta
-          } }]
+          } }
+          ],
+          ['table', (node, delta) => {
+            debugger 
+            return delta }
+          ]
         ]
       }
+    }
+  })
+
+  quill.on('text-change', function(delta, oldDelta, source) {
+    if (source == 'api') {
+      console.log(JSON.stringify(quill.getContents().ops, null, 2));
+      
+      console.log("An API call triggered this change.");
+    } else if (source == 'user') {
+      console.log(JSON.stringify(quill.getContents().ops, null, 2));
+      console.log("A user action triggered this change.");
     }
   })
 }

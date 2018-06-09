@@ -11,18 +11,23 @@ class TableBlot extends React.Component {
 
     class __cell extends Block {
       constructor(domNode){
-        debugger
+        
         super(domNode)
       }
 
       static create(value) {
-        debugger
+        
         let node = super.create()
         return node
       }
 
       static formats(domNode) {
+        
         return domNode.tagName === this.tagName ? undefined : super.formats(domNode)
+      }
+
+      formats() {
+        return { ['cell']: this.domNode.tagName }
       }
       
       format(name, value) {
@@ -73,27 +78,29 @@ class TableBlot extends React.Component {
 
     class __row extends Container {
       constructor(domNode) {
-        debugger
         super(domNode)
         this.build()
       }
 
       static create(value) {
-        debugger
         let tagName = 'tr'
         let node = super.create(tagName)
         return node
       }
 
       build() {
-        debugger
         super.build()
         // this.statics.defaultChild
       }
 
       static formats(domNode) {
-        debugger
+        return { row: true }
         return domNode.tagName === this.tagName ? undefined : super.formats(domNode)
+      }
+
+      formats() {
+        return { ['row']: this.domNode.tagName }
+        
       }
     
       format(name, value) {
@@ -122,11 +129,9 @@ class TableBlot extends React.Component {
           // if currently selected Blot type != 'buttonContainer'
           // create __button and move children from the Blot into the button
           let item = Parchment.create(this.statics.defaultChild);
-          let item2 = Parchment.create(this.statics.defaultChild);
           target.moveChildren(item);
           // append the button to the buttonContainer
           this.appendChild(item);
-          this.appendChild(item2);
         }
     
     
@@ -162,91 +167,263 @@ class TableBlot extends React.Component {
     __row.defaultChild = 'cell';
     __row.allowedChildren = [__cell];
     Quill.register(__row)
-  
-  class __table extends Container {
-    constructor(domNode, value) {
-      debugger
-      super(domNode)
-      this.build()
-    }
 
-    static create(value) {
-      debugger
-      let node = super.create();
-
-      let row1 = document.createElement('tr')
-      let row2 = document.createElement('tr')
-
-      let cell11 = document.createElement('td')
-      let cell12 = document.createElement('td')
-      row1.appendChild(cell11)
-      row1.appendChild(cell12)
-
-      let cell21 = document.createElement('td')
-      let cell22 = document.createElement('td')
-      row2.appendChild(cell21)
-      row2.appendChild(cell22)
-
-      node.appendChild(row1)
-      node.appendChild(row2)
-      return node;
-    }
-
-    format(name, value) {
-      if (this.children.length > 0) {
-        this.children.tail.format(name, value);
-      }
-    }
-
-    formats() {
-      debugger
-      return { table: true }
-    }
-
-    insertBefore(blot, ref) {
+    /*
+    class __tbody extends Container { 
+      constructor(domNode) {
         
-      if (true) {
-        super.insertBefore(blot, ref);
-      } else {
-        let index = ref == null ? this.length() : ref.offset(this);
-        let after = this.split(index);
-        after.parent.insertBefore(blot, after);
+        super(domNode)
+        this.build()
       }
-    }
 
-    optimize(context) {
-      // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
-      // this.appendChild(child)
-      // child.optimize(context)
-      // TODO: pass number of cells in row
-      // TODO: pass number of rows
-      super.optimize(context);
-      let next = this.next;
-      // if (next != null && next.prev === this &&
-      //     next.statics.blotName === this.statics.blotName &&
-      //     next.domNode.tagName === this.domNode.tagName &&
-      //     next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
-      //   next.moveChildren(this);
-      //   next.remove();
-      // }
-    }
+      static create(value) {
+        
+        let tagName = 'tbody'
+        let node = super.create(tagName)
+        return node
+      }
 
-    replace(target) {
+      build() {
+        
+        super.build()
+        // this.statics.defaultChild
+      }
+
+      static formats(domNode) {
+        
+        return { tbdoy: true }
+      }
+    
+      format(name, value) {
+        if (name === __row.blotName && value === false) {
+          // replace __button with <p>
+          // perserving children if any
+          this.replaceWith(Parchment.create(this.statics.scope))
+        } else {
+          // super.format(name, value)
+          this.domNode.setAttribute(name, value)
+        }
+      }
+
+      remove() {
+        if (this.prev == null && this.next == null) {
+          this.parent.remove()
+        } else {
+          super.remove()
+        }
+      }
+
+      replace(target) {
       
-      // target -- current selection in the ql editor window
-      if (target.statics.blotName !== this.statics.blotName) {
-        // if currently selected Blot type != 'buttonContainer'
-        // create __button and move children from the Blot into the button
-        let item = Parchment.create(this.statics.defaultChild);
-        target.moveChildren(item);
-        // append the button to the buttonContainer
-        this.appendChild(item);
+        // target -- current selection in the ql editor window
+        if (target.statics.blotName !== this.statics.blotName) {
+          // if currently selected Blot type != 'buttonContainer'
+          // create __button and move children from the Blot into the button
+          let item = Parchment.create(this.statics.defaultChild);
+          target.moveChildren(item);
+          // append the button to the buttonContainer
+          this.appendChild(item);
+        }
+    
+    
+        super.replace(target);
       }
 
 
-      super.replace(target);
+      replaceWith(name, value) {å
+        // on Button deletion
+
+        this.parent.isolate(this.offset(this.parent), this.length());
+
+        // if replacement Blot == buttonContainer
+        if (name === this.parent.statics.blotName) {
+          this.parent.replaceWith(name, value);
+          return this;
+        } else {
+          // Move buttonContainer children to buttonContainer parent
+          // and remove buttonContainer
+          this.parent.unwrap();
+          return super.replaceWith(name, value);
+        }
+      }
+
+      getFormat(name) {
+        return this.domNode.getAttribute(name)
+      }
     }
-  }
+
+    __tbody.blotName = 'tbody';
+    __tbody.tagName = 'tbody';
+    __tbody.scope = Parchment.Scope.BLOCK_BLOT;
+    __tbody.defaultChild = 'row';
+    __tbody.allowedChildren = [__row];
+    __tbody.className = 'ql-cpay-tbody'
+    Quill.register(__tbody)
+    */
+
+    /*
+    class __caption extends Block {
+      constructor(domNode){
+        
+        super(domNode)
+      }
+
+      static create(value) {
+        
+        let node = super.create()
+        return node
+      }
+
+      static formats(domNode) {
+        return { caption: true }
+      }
+      
+      format(name, value) {
+        if (name === __cell.blotName && value === false) {
+          // replace __button with <p>
+          // perserving children if any
+          this.replaceWith(Parchment.create(this.statics.scope))
+        } else {
+          // super.format(name, value)
+          this.domNode.setAttribute(name, value)
+        }
+      }
+
+      remove() {
+        if (this.prev == null && this.next == null) {
+          this.parent.remove()
+        } else {
+          super.remove()
+        }
+      }
+
+
+      replaceWith(name, value) {
+        // on Button deletion
+
+        this.parent.isolate(this.offset(this.parent), this.length());
+
+        // if replacement Blot == buttonContainer
+        if (name === this.parent.statics.blotName) {
+          this.parent.replaceWith(name, value);
+          return this;
+        } else {
+          // Move buttonContainer children to buttonContainer parent
+          // and remove buttonContainer
+          this.parent.unwrap();
+          return super.replaceWith(name, value);
+        }
+      }
+
+      getFormat(name) {
+        return this.domNode.getAttribute(name)
+      }
+     }
+
+    __caption.blotName = 'caption'
+    __caption.tagName = 'caption'
+    Quill.register(__caption)
+  */
+    class __table extends Container {
+      constructor(domNode, value) {
+        
+        super(domNode)
+        this.build()
+      }
+
+      static create(value) {
+        
+        let node = super.create();
+
+        let row1 = document.createElement('tr')
+        let row2 = document.createElement('tr')
+
+        let cell11 = document.createElement('td')
+        let cell12 = document.createElement('td')
+        row1.appendChild(cell11)
+        row1.appendChild(cell12)
+
+        // let cell21 = document.createElement('td')
+        // let cell22 = document.createElement('td')
+        // row2.appendChild(cell21)
+        // row2.appendChild(cell22)
+
+        node.appendChild(row1)
+        // node.appendChild(row2)
+        return node;
+      }
+
+      format(name, value) {
+        if (this.children.length > 0) {
+          this.children.tail.format(name, value);
+        }
+      }
+
+      // formats() {
+      //   debugger
+      //   // Invoked by getDelta at instantiation phase
+        
+      //   const embedDelta = {
+      //     insert: {
+      //       table: true
+      //     },
+      //     attributes: {
+      //       size: '2x2'
+      //     }
+      //   }
+
+      //   return embedDelta
+      // }
+
+      static formats(domNode) {
+        debugger
+        return {table: true}
+      }
+
+      insertBefore(blot, ref) {
+          
+        if (true) {
+          super.insertBefore(blot, ref);
+        } else {
+          let index = ref == null ? this.length() : ref.offset(this);
+          let after = this.split(index);
+          after.parent.insertBefore(blot, after);
+        }
+      }
+
+      optimize(context) {
+        // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
+        // this.appendChild(child)
+        // child.optimize(context)
+        // TODO: pass number of cells in row
+        // TODO: pass number of rows
+        super.optimize(context);
+        let next = this.next;
+        // if (next != null && next.prev === this &&
+        //     next.statics.blotName === this.statics.blotName &&
+        //     next.domNode.tagName === this.domNode.tagName &&
+        //     next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
+        //   next.moveChildren(this);
+        //   next.remove();
+        // }
+      }
+
+      replace(target) {
+        
+        // target -- current selection in the ql editor window
+        if (target.statics.blotName !== this.statics.blotName) {
+          // if currently selected Blot type != 'buttonContainer'
+          // create __button and move children from the Blot into the button
+          let item = Parchment.create(this.statics.defaultChild);
+          target.moveChildren(item);
+          // append the button to the buttonContainer
+          this.appendChild(item);
+        }
+
+
+        super.replace(target);
+      }
+    }
 
     __table.blotName = 'table';
     __table.tagName = 'table';

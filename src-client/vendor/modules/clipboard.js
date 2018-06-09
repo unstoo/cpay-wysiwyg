@@ -191,22 +191,32 @@ function isLine(node) {
 
 function traverse(node, elementMatchers, textMatchers) {  // Post-order
   if (node.nodeType === node.TEXT_NODE) {
+
     return textMatchers.reduce(function(delta, matcher) {
       return matcher(node, delta);
     }, new Delta());
+
   } else if (node.nodeType === node.ELEMENT_NODE) {
+    // If not text, then 
     return [].reduce.call(node.childNodes || [], (delta, childNode) => {
+
       let childrenDelta = traverse(childNode, elementMatchers, textMatchers);
+
       if (childNode.nodeType === node.ELEMENT_NODE) {
+
         childrenDelta = elementMatchers.reduce(function(childrenDelta, matcher) {
           return matcher(childNode, childrenDelta);
         }, childrenDelta);
+
         childrenDelta = (childNode[DOM_KEY] || []).reduce(function(childrenDelta, matcher) {
           return matcher(childNode, childrenDelta);
         }, childrenDelta);
       }
+
       return delta.concat(childrenDelta);
+
     }, new Delta());
+
   } else {
     return new Delta();
   }
