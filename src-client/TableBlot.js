@@ -75,8 +75,10 @@ class TableBlot extends React.Component {
     class __row extends Container {
       constructor(domNode) {
         super(domNode)
-        this.build()
         this.rowId = Date.now().toString()
+        domNode.setAttribute('data-rowId', this.rowId)
+        debugger
+        this.build()
       }
 
       static create(value) {
@@ -325,12 +327,12 @@ class TableBlot extends React.Component {
         super(domNode)
         this.build()
         this.tableId = Date.now().toString()
+        domNode.setAttribute('data-tableId', this.tableId)
       }
 
       static create(value) {
         
         let node = super.create();
-
         let row1 = document.createElement('tr')
         let row2 = document.createElement('tr')
 

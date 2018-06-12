@@ -33,7 +33,17 @@ var bindings = {
     shiftKey: true,
     format: ['cell'],
     handler: function(range, context) {
+      const tables = window.document.querySelectorAll('table')
+      let selectedTable = null
+      Array.prototype.forEach.call(tables, table => {
+        if (table.dataset.tableid === context.format.table) {
+          selectedTable = table
+        } 
+      })
       debugger
+      const selectedTableBlot = Quill.find(selectedTable)
+      const newRow = Parchment.create('row')
+      selectedTableBlot.insertBefore(newRow)
       return true
     }
   },
