@@ -28,10 +28,21 @@ var bindings = {
       return true
     }
   },
+  disableNewTableCellCreation: {
+    key: 'enter',
+    format: ['cell'],
+    handler: function(range, context) {
+      const selectedRow = document.querySelectorAll(`[data-rowid="${context.format.row}"]`)[0]
+      const selectedRowBlot = Quill.find(selectedRow)
+      const newCell = Parchment.create('cell')
+      selectedRowBlot.insertBefore(newCell)
+      debugger
+    }
+  },
   newTableRow: {
     key: 'enter',
     shiftKey: true,
-    format: ['cell'],
+    format: ['cell', 'row', 'tbody'],
     handler: function(range, context) {
       const tables = window.document.querySelectorAll('table')
       let selectedTable = null
@@ -40,11 +51,12 @@ var bindings = {
           selectedTable = table
         } 
       })
-      debugger
+      
       const selectedTableBlot = Quill.find(selectedTable)
       const newRow = Parchment.create('row')
+      // <table><tbody> .insertBefore(newRow) inside of here </tbody><table>
       selectedTableBlot.insertBefore(newRow)
-      return true
+      return false
     }
   },
   custom: {

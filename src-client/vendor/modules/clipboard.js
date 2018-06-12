@@ -152,16 +152,25 @@ Clipboard.DEFAULTS = {
 
 
 function applyFormat(delta, format, value) {
+  // В каких случаях format будет объектом?
+  //
   if (typeof format === 'object') {
     return Object.keys(format).reduce(function(delta, key) {
       return applyFormat(delta, key, format[key]);
     }, delta);
+  // 
   } else {
     return delta.reduce(function(delta, op) {
+      
       if (op.attributes && op.attributes[format]) {
+        // Что делает push?
+        //
         return delta.push(op);
       } else {
-        return delta.insert(op.insert, extend({}, {[format]: value}, op.attributes));
+        // А что делает insert?
+        //
+        const extendedAttributes = extend({}, {[format]: value}, op.attributes)
+        return delta.insert(op.insert, extendedAttributes);
       }
     }, new Delta());
   }
