@@ -28,6 +28,15 @@ var bindings = {
       return true
     }
   },
+  newTableRow: {
+    key: 'enter',
+    shiftKey: true,
+    format: ['cell'],
+    handler: function(range, context) {
+      debugger
+      return true
+    }
+  },
   custom: {
     key: 'backspace',
     format: ['button', 'buttonContainer'],

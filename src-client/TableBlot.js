@@ -10,19 +10,16 @@ class TableBlot extends React.Component {
     let Parchment = Quill.import('parchment')
 
     class __cell extends Block {
-      constructor(domNode){
-        
+      constructor(domNode){   
         super(domNode)
       }
 
-      static create(value) {
-        
+      static create(value) { 
         let node = super.create()
         return node
       }
 
-      static formats(domNode) {
-        
+      static formats(domNode) { 
         return domNode.tagName === this.tagName ? undefined : super.formats(domNode)
       }
 
@@ -48,7 +45,6 @@ class TableBlot extends React.Component {
           super.remove()
         }
       }
-
 
       replaceWith(name, value) {
         // on Button deletion
@@ -80,6 +76,7 @@ class TableBlot extends React.Component {
       constructor(domNode) {
         super(domNode)
         this.build()
+        this.rowId = Date.now().toString()
       }
 
       static create(value) {
@@ -90,7 +87,6 @@ class TableBlot extends React.Component {
 
       build() {
         super.build()
-        // this.statics.defaultChild
       }
 
       static formats(domNode) {
@@ -99,8 +95,7 @@ class TableBlot extends React.Component {
       }
 
       formats() {
-        return { ['row']: this.domNode.tagName }
-        
+        return { ['row']: this.rowId } 
       }
     
       format(name, value) {
@@ -123,16 +118,16 @@ class TableBlot extends React.Component {
       }
 
       replace(target) {
-      debugger
+      
         // target -- current selection in the ql editor window
-        if (target.statics.blotName !== this.statics.blotName) {
-          // if currently selected Blot type != 'buttonContainer'
-          // create __button and move children from the Blot into the button
-          let item = Parchment.create(this.statics.defaultChild);
-          target.moveChildren(item);
-          // append the button to the buttonContainer
-          this.appendChild(item);
-        }
+        // if (target.statics.blotName !== this.statics.blotName) {
+        //   // if currently selected Blot type != 'buttonContainer'
+        //   // create __button and move children from the Blot into the button
+        //   let item = Parchment.create(this.statics.defaultChild);
+        //   target.moveChildren(item);
+        //   // append the button to the buttonContainer
+        //   this.appendChild(item);
+        // }
     
     
         super.replace(target);
@@ -323,12 +318,13 @@ class TableBlot extends React.Component {
     __caption.blotName = 'caption'
     __caption.tagName = 'caption'
     Quill.register(__caption)
-  */
+  /**/
     class __table extends Container {
       constructor(domNode, value) {
-        
+        // debugger
         super(domNode)
         this.build()
+        this.tableId = Date.now().toString()
       }
 
       static create(value) {
@@ -338,10 +334,10 @@ class TableBlot extends React.Component {
         let row1 = document.createElement('tr')
         let row2 = document.createElement('tr')
 
-        let cell11 = document.createElement('td')
-        let cell12 = document.createElement('td')
-        row1.appendChild(cell11)
-        row1.appendChild(cell12)
+        let cell1 = document.createElement('td')
+        let cell2 = document.createElement('td')
+        row1.appendChild(cell1)
+        row2.appendChild(cell2)
 
         // let cell21 = document.createElement('td')
         // let cell22 = document.createElement('td')
@@ -349,31 +345,27 @@ class TableBlot extends React.Component {
         // row2.appendChild(cell22)
 
         node.appendChild(row1)
-        // node.appendChild(row2)
+        node.appendChild(row2)
         return node;
       }
 
       format(name, value) {
+        
         if (this.children.length > 0) {
           this.children.tail.format(name, value);
         }
       }
 
-      // formats() {
-      //   debugger
-      //   // Invoked by getDelta at instantiation phase
+      formats() {
         
-      //   const embedDelta = {
-      //     insert: {
-      //       table: true
-      //     },
-      //     attributes: {
-      //       size: '2x2'
-      //     }
-      //   }
+        // Invoked by getDelta at instantiation phase
+        
+        const embedDelta = {
+            table: this.tableId
+        }
 
-      //   return embedDelta
-      // }
+        return embedDelta
+      }
 
       static formats(domNode) {
         debugger
@@ -382,12 +374,12 @@ class TableBlot extends React.Component {
 
       insertBefore(blot, ref) {
           
-        if (true) {
+        if (this.statics.allowedChildren[0].tagName === blot.domNode.tagName) {
           super.insertBefore(blot, ref);
         } else {
-          let index = ref == null ? this.length() : ref.offset(this);
-          let after = this.split(index);
-          after.parent.insertBefore(blot, after);
+          // let index = ref == null ? this.length() : ref.offset(this);
+          // let after = this.split(index);
+          // after.parent.insertBefore(blot, after);
         }
       }
 
@@ -411,14 +403,14 @@ class TableBlot extends React.Component {
       replace(target) {
         
         // target -- current selection in the ql editor window
-        if (target.statics.blotName !== this.statics.blotName) {
-          // if currently selected Blot type != 'buttonContainer'
-          // create __button and move children from the Blot into the button
-          let item = Parchment.create(this.statics.defaultChild);
-          target.moveChildren(item);
-          // append the button to the buttonContainer
-          this.appendChild(item);
-        }
+        // if (target.statics.blotName !== this.statics.blotName) {
+        //   // if currently selected Blot type != 'buttonContainer'
+        //   // create __button and move children from the Blot into the button
+        //   let item = Parchment.create(this.statics.defaultChild);
+        //   target.moveChildren(item);
+        //   // append the button to the buttonContainer
+        //   this.appendChild(item);
+        // }
 
 
         super.replace(target);
@@ -441,7 +433,7 @@ class TableBlot extends React.Component {
       // if (selection.length === 0) return
         // quill.insertText(selection.index + selection.length, '\n')
         // quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
-        quill.insertEmbed(0, 'table', [2,2])
+        quill.format('table', true)
       }}>
       <strong>Table</strong>
       </button>
