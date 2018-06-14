@@ -20,32 +20,48 @@ class Editor {
   }
 
   applyDelta(delta) {
+
     let consumeNextNewline = false;
     this.scroll.update();
     let scrollLength = this.scroll.length();
     this.scroll.batchStart();
     delta = normalizeDelta(delta);
+
+    // ACHTUNG
+    // WAS IST DAS?
+    // NICH FERCHTEIN T_T
     delta.reduce((index, op) => {
+
       let length = op.retain || op.delete || op.insert.length || 1;
       let attributes = op.attributes || {};
+
       if (op.insert != null) {
         if (typeof op.insert === 'string') {
+
           let text = op.insert;
+
           if (text.endsWith('\n') && consumeNextNewline) {
             consumeNextNewline = false;
             text = text.slice(0, -1);
           }
+
           if (index >= scrollLength && !text.endsWith('\n')) {
             consumeNextNewline = true;
           }
+
+          // Insert text into editor
           this.scroll.insertAt(index, text);
+          // wtf
           let [line, offset] = this.scroll.line(index);
           let formats = extend({}, bubbleFormats(line));
+
           if (line instanceof Block) {
             let [leaf, ] = line.descendant(Parchment.Leaf, offset);
             formats = extend(formats, bubbleFormats(leaf));
           }
+
           attributes = DeltaOp.attributes.diff(formats, attributes) || {};
+
         } else if (typeof op.insert === 'object') {
           let key = Object.keys(op.insert)[0];  // There should only be one key
           if (key == null) return index;
@@ -53,11 +69,14 @@ class Editor {
         }
         scrollLength += length;
       }
+
       Object.keys(attributes).forEach((name) => {
         this.scroll.formatAt(index, length, name, attributes[name]);
       });
+
       return index + length;
     }, 0);
+
     delta.reduce((index, op) => {
       if (typeof op.delete === 'number') {
         this.scroll.deleteAt(index, op.delete);
@@ -65,9 +84,12 @@ class Editor {
       }
       return index + (op.retain || op.insert.length || 1);
     }, 0);
+
     this.scroll.batchEnd();
     return this.update(delta);
   }
+
+
 
   deleteText(index, length) {
     this.scroll.deleteAt(index, length);

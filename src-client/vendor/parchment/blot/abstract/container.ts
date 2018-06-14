@@ -166,9 +166,9 @@ class ContainerBlot extends ShadowBlot implements Parent {
   }
 
   replace(target: Blot): void {
-    // if currently selected Blot in the editor is ContainerBlot
+    // if the currently selected Blot in the editor is ContainerBlot
     if (target instanceof ContainerBlot) {
-      // then move children of selected Blot into the ContainerBlot
+      // then move children of the selected Blot into the new replacement Blot
       target.moveChildren(this);
     }
     super.replace(target);

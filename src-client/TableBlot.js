@@ -10,34 +10,61 @@ class TableBlot extends React.Component {
     let Parchment = Quill.import('parchment')
 
     class __cell extends Block {
-      constructor(domNode) {   
+      constructor(domNode) {
+        debugger  
         super(domNode)
       }
 
-      static create(value) { 
-        let node = super.create()
-        node.setAttribute('data-cellid', Date.now().toString())
+      static create(value) {
+        debugger
+        const node = super.create()
+        node.setAttribute('data-cellid', value || Date.now().toString())
         return node
       }
 
+      // Returns format values represented by domNode if it is this Blot's type
+      // No checking that domNode is this Blot's type is required.
       static formats(domNode) { 
         return domNode.getAttribute('data-cellid')
       }
 
+      // Return formats represented by blot, including from Attributors.
       formats() {
         return { ['cell']: this.domNode.getAttribute('data-cellid') }
       }
       
+      // Apply format to blot. Should not pass onto child or other blot.  
       format(name, value) {
         debugger
-        if (name === __cell.blotName && value === false) {
-          // replace __button with <p>
-          // perserving children if any
-          this.replaceWith(Parchment.create(this.statics.scope))
-        } else {
-          // super.format(name, value)
-          this.domNode.setAttribute(name, value)
+        if (name === 'row' || name === 'table') {
+          this.domNode.setAttribute('data-'+name+'id', value)
         }
+        super.format(name, value)
+      }
+
+      moveChildren(target) {
+        if (target.statics.blotName === 'row') {
+          // target === row
+          // can't move children (text) out of a cell into a row
+          // move self as it is instead
+          debugger
+          // shadow.ts::insertInto():
+          // 1 removes the __cell Blot from its current parent(the Scroll) children list
+          // 2 inserts the __cell Blot into the target (__row)
+          // 3 inserts the <td>...</td> into the <tr></tr>
+          const cloneCell = this.clone() 
+          this.moveChildren(cloneCell)
+          target.appendChild(cloneCell)
+          return
+        } else {
+          super.moveChildren(target)
+        }
+      }
+
+      optimize(context) {
+        // cell
+        debugger
+        super.optimize()
       }
 
       remove() {
@@ -51,18 +78,7 @@ class TableBlot extends React.Component {
 
       replaceWith(name, value) {
         debugger
-        this.parent.isolate(this.offset(this.parent), this.length());
-
-        // if replacement Blot == buttonContainer
-        if (name === this.parent.statics.blotName) {
-          this.parent.replaceWith(name, value);
-          return this;
-        } else {
-          // Move buttonContainer children to buttonContainer parent
-          // and remove buttonContainer
-          this.parent.unwrap();
-          return super.replaceWith(name, value);
-        }
+        super.replaceWith(name, value)
       }
     }
 
@@ -72,16 +88,14 @@ class TableBlot extends React.Component {
 
     class __row extends Container {
       constructor(domNode) {
-        debugger
         super(domNode)
         this.build()
       }
 
       static create(value) {
-        debugger
         const tagName = 'tr'
         let node = super.create(tagName)
-        node.setAttribute('data-rowid', Date.now().toString())
+        node.setAttribute('data-rowid', value || Date.now().toString())
         return node
       }
 
@@ -94,25 +108,26 @@ class TableBlot extends React.Component {
       }
 
       formats() {
-        return { ['row']: this.domNode.getAttribute('data-rowid')} 
+        return { row: this.domNode.getAttribute('data-rowid')} 
       }
     
       format(name, value) {
         debugger
-        if (name === __row.blotName && value === false) {
-          // replace __button with <p>
-          // perserving children if any
-          this.replaceWith(Parchment.create(this.statics.scope))
-        } else {
-          // super.format(name, value)
-          this.domNode.setAttribute(name, value)
-        }
+        super.format(name, value)
+      }
+
+      optimize(context) {
+        // row
+        debugger
+        super.optimize(context)
       }
 
       remove() {
         if (this.prev == null && this.next == null) {
+          // if this __cell is the only child then remove its __row
           this.parent.remove()
         } else {
+          // otherwise just remove the __cell
           super.remove()
         }
       }
@@ -127,13 +142,23 @@ class TableBlot extends React.Component {
         //   // append the button to the buttonContainer
         //   this.appendChild(item);
         // }
-        super.replace(target)
+        // this === cell
+        // target === row
+        // this.parent === ql.editor
+        // target.parent === undefined
+        if (target.statics.blotName === 'cell') {
+          super.replace(target)
+          
+        } else {
+          super.replace(target)
+
+        }
       }
 
 
       replaceWith(name, value) {
+        // row
         debugger
-        // on Button deletion
         this.parent.isolate(this.offset(this.parent), this.length())
 
         // if replacement Blot == buttonContainer
@@ -193,6 +218,7 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
+        // table
         // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
         // this.appendChild(child)
         // child.optimize(context)
@@ -223,7 +249,7 @@ class TableBlot extends React.Component {
       }
     }
 
-    __table.blotName = 'cpay-table'
+    __table.blotName = 'table'
     __table.tagName = 'table'
     __table.scope = Parchment.Scope.BLOCK_BLOT
     __table.defaultChild = 'row'
@@ -239,7 +265,7 @@ class TableBlot extends React.Component {
       // if (selection.length === 0) return
         quill.insertText(selection.index + selection.length, '\n')
         quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
-        quill.format('cpay-table', true)
+        quill.format('table', true)
       }}>
       <strong>Table</strong>
       </button>

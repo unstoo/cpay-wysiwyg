@@ -120,7 +120,8 @@ const quillInit = () => {
           ],
           ['table', (node, delta) => {
             debugger 
-            return delta }
+            return delta 
+          }
           ]
         ]
       }

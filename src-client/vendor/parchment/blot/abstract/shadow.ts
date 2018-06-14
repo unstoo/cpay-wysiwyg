@@ -111,19 +111,29 @@ class ShadowBlot implements Blot {
 
     let refDomNode: Node | null = null;
 
+    // insert 'Polya' into the new parent's children list
     parentBlot.children.insertBefore(this, refBlot);
+
+
     if (refBlot != null) {
       refDomNode = refBlot.domNode;
     }
 
-    // if __button parent != __buttonContainer
-    // or __button.nextSibling isn't refNode
+    // 1 if the old "Polya".parent != the new parent (cell)
+    // 2 if __row.parentNode != the new supposed parent.domNode
     if (this.domNode.parentNode != parentBlot.domNode ||
+    // 1 or if 
+    // 2 or if __row.nextSibling is already a child of the parent.domNode, but not in the right spot among siblings
         this.domNode.nextSibling != refDomNode) {
-      // then insert __button into __buttonContainer
+      // 1 then insert "Polya" into the new parent (cell) DOM-physically
+      // 2 then insert __row into the parent.domNode into the corresponding place
       parentBlot.domNode.insertBefore(this.domNode, refDomNode);
     }
+
+    // 1 set the "Polya".parent = the new parent (cell)
+    // 2 set the __row.parent = __cell.parent (the Scroll)
     this.parent = parentBlot;
+    // wtf?
     this.attach();
   }
 
@@ -161,14 +171,19 @@ class ShadowBlot implements Blot {
   replace(target: Blot): void {
 
     if (target.parent == null) return;
-    // insert self into the parent of the currently selected Blot in the editor
+    // __cell.[-> parent <-].insertBefore(__row, __cell.next)
+    // Will 'place' __row into the current place of __cell
+    // 'place' -- will update Blot props and DOM tree
     target.parent.insertBefore(this, target.next);
-    // remove the currently selected Blot
+    // remove __cell
     target.remove();
   }
 
   replaceWith(name: string | Blot, value?: any): Blot {
+    // A blot
     let replacement = typeof name === 'string' ? Registry.create(name, value) : name;
+    console.log('replaceWith()')
+    // Insert the replacement into 'this.parent', and this.remove() 
     replacement.replace(this);
     return replacement;
   }

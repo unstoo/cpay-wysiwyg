@@ -77,6 +77,8 @@ class ScrollBlot extends ContainerBlot {
       }
       if (markParent) mark(blot.parent);
     };
+
+    // Optimize the deepest child first, and move back to top level.
     let optimize = function(blot: Blot) {
       // Post-order traversal
       if (
@@ -92,6 +94,8 @@ class ScrollBlot extends ContainerBlot {
       }
       blot.optimize(context);
     };
+
+
     let remaining = mutations;
     for (let i = 0; remaining.length > 0; i += 1) {
       if (i >= MAX_OPTIMIZE_ITERATIONS) {
