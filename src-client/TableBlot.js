@@ -128,6 +128,16 @@ class TableBlot extends React.Component {
       optimize(context) {
         // row
         debugger
+        if (this.next && this.next.statics.blotName === 'row' 
+        && this.next.domNode.dataset.rowid === this.domNode.dataset.rowid) {
+          const nextTableChildrenList = this.next.children
+          // append children of the next table into this table
+          // const cloneTable = this.next.clone()
+          // move children to cloned
+          this.next.moveChildren(this)
+          this.next.remove()
+        }
+
         super.optimize(context)
       }
 
@@ -143,14 +153,6 @@ class TableBlot extends React.Component {
 
       moveChildren(target) {
         if (target.statics.blotName === 'table') {
-          // target === row
-          // can't move children (text) out of a cell into a row
-          // move self as it is instead
-          debugger
-          // shadow.ts::insertInto():
-          // 1 removes the __cell Blot from its current parent(the Scroll) children list
-          // 2 inserts the __cell Blot into the target (__row)
-          // 3 inserts the <td>...</td> into the <tr></tr>
           const cloneRow = this.clone() 
           this.moveChildren(cloneRow)
           target.appendChild(cloneRow)
@@ -179,7 +181,6 @@ class TableBlot extends React.Component {
           
         } else {
           super.replace(target)
-
         }
       }
 
@@ -246,7 +247,9 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
-        debugger
+        // Super optimize ensures format('table') works
+        super.optimize(context)
+
         if (this.next.statics.blotName === 'table' 
         && this.next.domNode.dataset.tableid === this.domNode.dataset.tableid) {
           const nextTableChildrenList = this.next.children
@@ -255,43 +258,16 @@ class TableBlot extends React.Component {
           // move children to cloned
           this.next.moveChildren(this)
           this.next.remove()
-
         }
-        // table
-        // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
-        // this.appendChild(child)
-        // child.optimize(context)
-        // TODO: pass number of cells in row
-        // TODO: pass number of rows
-        super.optimize(context);
-        let next = this.next;
-        // if (next != null && next.prev === this &&
-        //     next.statics.blotName === this.statics.blotName &&
-        //     next.domNode.tagName === this.domNode.tagName &&
-        //     next.domNode.getAttribute('data-checked') === this.domNode.getAttribute('data-checked')) {
-        //   next.moveChildren(this);
-        //   next.remove();
-        // }
       }
 
       replace(target) {
-        // target -- current selection in the ql editor window
-        // if (target.statics.blotName !== this.statics.blotName) {
-        //   // if currently selected Blot type != 'buttonContainer'
-        //   // create __button and move children from the Blot into the button
-        //   let item = Parchment.create(this.statics.defaultChild);
-        //   target.moveChildren(item);
-        //   // append the button to the buttonContainer
-        //   this.appendChild(item);
-        // }
-
         if (target.statics.blotName === 'cell' && target.parent.statics.blotName === 'row') {
           // Don't replace the __cell with this table
           // Replace the __cell's row instead
           super.replace(target.parent)
           return
         }
-
         super.replace(target)
       }
     }
