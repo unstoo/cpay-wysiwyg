@@ -11,12 +11,12 @@ class TableBlot extends React.Component {
 
     class __cell extends Block {
       constructor(domNode) {
-        debugger  
+          
         super(domNode)
       }
 
       static create(value) {
-        debugger
+        
         const node = super.create()
         node.setAttribute('data-cellid', value || Date.now().toString())
         return node
@@ -35,7 +35,7 @@ class TableBlot extends React.Component {
       
       // Apply format to blot. Should not pass onto child or other blot.  
       format(name, value) {
-        debugger
+        
         if (name === 'row' || name === 'table') {
           this.domNode.setAttribute('data-'+name+'id', value)
         }
@@ -47,7 +47,7 @@ class TableBlot extends React.Component {
           // target === row
           // can't move children (text) out of a cell into a row
           // move self as it is instead
-          debugger
+          
           // shadow.ts::insertInto():
           // 1 removes the __cell Blot from its current parent(the Scroll) children list
           // 2 inserts the __cell Blot into the target (__row)
@@ -64,7 +64,16 @@ class TableBlot extends React.Component {
       optimize(context) {
         // cell
         debugger
-        super.optimize()
+        const isCellInsideTable = 
+          this.parent.parent.statics.blotName === 'table' ? true: false
+
+        if (!isCellInsideTable) return super.optimize()
+
+        const parentTable = this.parent.parent
+
+        parentTable.prev
+        parentTable.next
+        
       }
 
       remove() {
@@ -208,7 +217,7 @@ class TableBlot extends React.Component {
 
       static create(value) {
         let node = super.create()
-        node.setAttribute('data-tableid', Date.now().toString())
+        node.setAttribute('data-tableid', value || Date.now().toString())
         return node
       }
 
@@ -237,6 +246,17 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
+        debugger
+        if (this.next.statics.blotName === 'table' 
+        && this.next.domNode.dataset.tableid === this.domNode.dataset.tableid) {
+          const nextTableChildrenList = this.next.children
+          // append children of the next table into this table
+          // const cloneTable = this.next.clone()
+          // move children to cloned
+          this.next.moveChildren(this)
+          this.next.remove()
+
+        }
         // table
         // super.optimize(context) will Registry.create(this.statics.defaultChild:[row])
         // this.appendChild(child)
@@ -292,7 +312,7 @@ class TableBlot extends React.Component {
       // if (selection.length === 0) return
         quill.insertText(selection.index + selection.length, '\n')
         quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
-        quill.format('table', true)
+        quill.format('table', Date.now().toString())
       }}>
       <strong>Table</strong>
       </button>
