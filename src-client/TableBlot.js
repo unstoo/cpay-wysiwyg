@@ -10,15 +10,6 @@ class TableBlot extends React.Component {
     let Parchment = Quill.import('parchment')
 
     class __cell extends Block {
-      constructor(domNode) {
-          
-        super(domNode)
-      }
-
-      getFormat() {
-        return
-      }
-
       static create(value) {
         const node = super.create()
         debugger
@@ -43,14 +34,14 @@ class TableBlot extends React.Component {
 
       // Return formats represented by blot, including from Attributors.
       formats() {
-        return { ['cell']: this.domNode.getAttribute('data-cellid') }
+        return { 'cell': this.domNode.getAttribute('data-cellid') }
       }
       
       // Apply format to blot. Should not pass onto child or other blot.  
       format(name, value) {
         
         if (name === 'row' || name === 'table') {
-          this.domNode.setAttribute('data-'+name+'id', value)
+          this.domNode.setAttribute('data-' + name + 'id', value)
         }
         super.format(name, value)
       }
@@ -60,11 +51,6 @@ class TableBlot extends React.Component {
           // target === row
           // can't move children (text) out of a cell into a row
           // move self as it is instead
-          
-          // shadow.ts::insertInto():
-          // 1 removes the __cell Blot from its current parent(the Scroll) children list
-          // 2 inserts the __cell Blot into the target (__row)
-          // 3 inserts the <td>...</td> into the <tr></tr>
           const cloneCell = this.clone() 
           this.moveChildren(cloneCell)
           target.appendChild(cloneCell)
@@ -75,24 +61,10 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
-        // cell
-        
-        // const isCellInsideTable = 
-        //   this.parent.parent.statics.blotName === 'table' ? true: false
-
-        // if (!isCellInsideTable) return super.optimize()
-
-        // const parentTable = this.parent.parent
-
-        // parentTable.prev
-        // parentTable.next
-
         super.optimize(context)
-        
       }
 
       remove() {
-        
         if (this.prev == null && this.next == null) {
           this.parent.remove()
         } else {
@@ -101,7 +73,6 @@ class TableBlot extends React.Component {
       }
 
       replaceWith(name, value) {
-        
         super.replaceWith(name, value)
       }
     }
@@ -140,8 +111,6 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
-        // row
-        
         if (this.next && this.next.statics.blotName === 'row' 
         && this.next.domNode.dataset.rowid === this.domNode.dataset.rowid) {
           const nextTableChildrenList = this.next.children
@@ -177,19 +146,6 @@ class TableBlot extends React.Component {
       }
 
       replace(target) {
-        // target -- current selection in the ql editor window
-        // if (target.statics.blotName !== this.statics.blotName) {
-        //   // if currently selected Blot type != 'buttonContainer'
-        //   // create __button and move children from the Blot into the button
-        //   let item = Parchment.create(this.statics.defaultChild);
-        //   target.moveChildren(item);
-        //   // append the button to the buttonContainer
-        //   this.appendChild(item);
-        // }
-        // this === cell
-        // target === row
-        // this.parent === ql.editor
-        // target.parent === undefined
         if (target.statics.blotName === 'cell') {
           super.replace(target)
           
@@ -201,16 +157,12 @@ class TableBlot extends React.Component {
 
       replaceWith(name, value) {
         // row
-        
         this.parent.isolate(this.offset(this.parent), this.length())
 
-        // if replacement Blot == buttonContainer
         if (name === this.parent.statics.blotName) {
           this.parent.replaceWith(name, value)
           return this;
         } else {
-          // Move buttonContainer children to buttonContainer parent
-          // and remove buttonContainer
           this.parent.unwrap();
           return super.replaceWith(name, value)
         }
@@ -238,7 +190,8 @@ class TableBlot extends React.Component {
       }
 
       format(name, value) {
-        // Who invokes this?
+        // Who invokes this? Couldn't trace.
+        // TODO: clean it up
         if (this.children.length > 0) {
           this.children.tail.format(name, value);
         }
@@ -262,7 +215,7 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
-        // Super optimize ensures format('table') works
+        // super.optimize ensures format('table') works
         super.optimize(context)
 
         if (this.next.statics.blotName === 'table' 
@@ -279,8 +232,8 @@ class TableBlot extends React.Component {
       replace(target) {
         if (target.statics.blotName === 'cell' 
         && target.parent.statics.blotName === 'row') {
-          // Don't replace the __cell with this table
-          // Replace the __cell's row instead
+          // don't replace the __cell within this table
+          // replace the __cell's row instead
           super.replace(target.parent)
           return
         }
@@ -294,7 +247,7 @@ class TableBlot extends React.Component {
         const { row: rowId } = newRow.formats()
         const { table: tableId } = thisTable.formats()
         let newCell
-        debugger
+
         while (columnsCount-->0) {
           newCell = Parchment.create(newRow.statics.defaultChild, {
             cell: '',
@@ -312,7 +265,8 @@ class TableBlot extends React.Component {
 
         if (rowsCount === 1) return this.remove()
 
-        // else remove last row
+        // remove the last row in this table
+        return this.children.tail.remove()
       }
 
       addColumn(options) {
@@ -341,7 +295,11 @@ class TableBlot extends React.Component {
 
         if (columnsCount === 1) return this.remove()
 
-        // else remove the last cell in each row
+        let curRow = this.children.head
+        while (curRow) {
+          curRow.children.tail.remove()
+          curRow = curRow.next
+        }
       }
 
       tableSize() {
