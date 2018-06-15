@@ -4,8 +4,21 @@ import App from './App'
 // import Quill from 'quill'
 import './styles.css'
 import hdocsApi from './hdocs-api'
-
 import Quill from './vendor/quill'
+import S3 from 'aws-sdk/clients/s3'
+window.s3 = new S3({
+    apiVersion: '2006-03-01',
+    region: 's3-eu-west-1',
+    endpoint: 'help.cryptopay.me.s3-eu-west-1.amazonaws.com',
+    params: {
+      Bucket: 'help.cryptopay.me', 
+    },
+    credentials: {
+      accessKeyId: localStorage.awsid,
+      secretAccessKey: localStorage.awssecret
+    }
+  })
+
 
 window.Quill = Quill
 window.Delta = Quill.import('delta')
@@ -121,7 +134,6 @@ const quillInit = () => {
           } }
           ],
           ['table', (node, delta) => {
-            debugger 
             return delta 
           }
           ]
