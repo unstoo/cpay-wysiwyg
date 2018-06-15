@@ -21,7 +21,17 @@ class TableBlot extends React.Component {
 
       static create(value) {
         const node = super.create()
-        node.setAttribute('data-cellid', value || Date.now().toString())
+        debugger
+        if (typeof(value) === 'undefined') {
+          node.setAttribute('data-cellid', Date.now().toString())
+        } else if (typeof(value) === 'string') {
+          node.setAttribute('data-cellid', value)
+        } else if (typeof(value) === 'object') {
+          node.setAttribute('data-cellid', value.cell || Date.now().toString())
+          node.setAttribute('data-rowid', value.row || Date.now().toString())
+          node.setAttribute('data-tableid', value.table || Date.now().toString())
+        }
+
         return node
       }
 
@@ -126,7 +136,6 @@ class TableBlot extends React.Component {
       }
     
       format(name, value) {
-        
         super.format(name, value)
       }
 
@@ -279,15 +288,23 @@ class TableBlot extends React.Component {
       }
 
       addRow(options) {
+        const thisTable = this
+        let { columnsCount } = thisTable.tableSize()
+        const newRow = Parchment.create(thisTable.statics.defaultChild)
+        const { row: rowId } = newRow.formats()
+        const { table: tableId } = thisTable.formats()
+        let newCell
         debugger
-        const { columnsCount } = this.tableSize()
-        const newRow = Parchment.create(this.statics.defaultChild)
+        while (columnsCount-->0) {
+          newCell = Parchment.create(newRow.statics.defaultChild, {
+            cell: '',
+            row: rowId,
+            table: tableId
+          })
+          newRow.appendChild(newCell)
+        }
 
-        if (columnsCount === 1) return this.appendChild(newRow)
-
-        const newCells = []
-        // create enough cells
-        // 
+        thisTable.appendChild(newRow)
       }
       
       removeRow(options) {
@@ -299,8 +316,24 @@ class TableBlot extends React.Component {
       }
 
       addColumn(options) {
-        // this.childrens.head
-        // this.childrens.tail
+        const { rowsCount } = this.tableSize()
+        debugger
+        let curRow = this.children.head
+        let { table: tableId } = this.formats()
+
+        let newCell
+        while (curRow) {
+            let { row: rowId } = curRow.formats()
+
+            newCell = Parchment.create(curRow.statics.defaultChild, {
+              cell: undefined,
+              row: rowId,
+              table: tableId
+            })
+
+            curRow.appendChild(newCell)
+            curRow = curRow.next
+        }
       }
 
       removeColumn(options) {
