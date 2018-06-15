@@ -28,35 +28,37 @@ var bindings = {
       return true
     }
   },
-  disableNewTableCellCreation: {
-    key: 'enter',
-    format: ['cell'],
+  emptycell: {
+    key: 'backspace',
+    format: ['table', 'cell'],
+    offset: 0,
     handler: function(range, context) {
-      const selectedRow = document.querySelectorAll(`[data-rowid="${context.format.row}"]`)[0]
-      const selectedRowBlot = Quill.find(selectedRow)
-      const newCell = Parchment.create('cell')
-      selectedRowBlot.insertBefore(newCell)
-      debugger
+      this.quill.setSelection({index: range.index ? range.index - 1 : range.index, length: 0})
+      return
+    }
+  },
+  newTableColumn: {
+    key: 'enter',
+    format: ['table'],
+    handler: function(range, context) {
+      // Quill.find(document.querySelectorAll(`[data-tableid="${context.format.table}"]`)[0]).addColumn()
+      // const selectedRow = document.querySelectorAll(`[data-rowid="${context.format.row}"]`)[0]
+      // const selectedRowBlot = Quill.find(selectedRow)
+      // const newCell = Parchment.create('cell')
+      // selectedRowBlot.insertBefore(newCell)
+      // debugger
+      this.quill.setSelection({index: range.index + 1, length: 0})
+      return
     }
   },
   newTableRow: {
     key: 'enter',
     shiftKey: true,
-    format: ['cell', 'row', 'tbody'],
+    format: ['table'],
     handler: function(range, context) {
-      const tables = window.document.querySelectorAll('table')
-      let selectedTable = null
-      Array.prototype.forEach.call(tables, table => {
-        if (table.dataset.tableid === context.format.table) {
-          selectedTable = table
-        } 
-      })
-      
-      const selectedTableBlot = Quill.find(selectedTable)
-      const newRow = Parchment.create('row')
-      // <table><tbody> .insertBefore(newRow) inside of here </tbody><table>
-      selectedTableBlot.insertBefore(newRow)
-      return false
+      // Quill.find(document.querySelectorAll(`[data-tableid="${context.format.table}"]`)[0]).addRow()
+      this.quill.setSelection({index: range.index + 1, length: 0})
+      return
     }
   },
   custom: {
