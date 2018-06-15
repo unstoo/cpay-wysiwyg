@@ -1,5 +1,4 @@
 import React from 'react'
-// import Quill from 'quill'
 
 class TableBlot extends React.Component {
   constructor(props) {
@@ -10,9 +9,11 @@ class TableBlot extends React.Component {
     let Parchment = Quill.import('parchment')
 
     class __cell extends Block {
+
+      // create a domNode to which a corresponding __cell blot will be attached
       static create(value) {
         const node = super.create()
-        debugger
+        
         if (typeof(value) === 'undefined') {
           node.setAttribute('data-cellid', Date.now().toString())
         } else if (typeof(value) === 'string') {
@@ -49,8 +50,8 @@ class TableBlot extends React.Component {
       moveChildren(target) {
         if (target.statics.blotName === 'row') {
           // target === row
-          // can't move children (text) out of a cell into a row
-          // move self as it is instead
+          // can't move children (text) of a cell into a row
+          // move the whole cell instead
           const cloneCell = this.clone() 
           this.moveChildren(cloneCell)
           target.appendChild(cloneCell)
@@ -154,7 +155,6 @@ class TableBlot extends React.Component {
         }
       }
 
-
       replaceWith(name, value) {
         // row
         this.parent.isolate(this.offset(this.parent), this.length())
@@ -215,7 +215,7 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
-        // super.optimize ensures format('table') works
+        // super.optimize ensures quill.format('table') works
         super.optimize(context)
 
         if (this.next.statics.blotName === 'table' 

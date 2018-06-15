@@ -53,6 +53,7 @@ Emitter.events = {
   SELECTION_CHANGE     : 'selection-change',
   TEXT_CHANGE          : 'text-change'
 };
+
 Emitter.sources = {
   API    : 'api',
   SILENT : 'silent',
