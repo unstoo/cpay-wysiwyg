@@ -25,7 +25,8 @@ class App extends React.Component {
       articlePreviewMode: false,
       selectedArticleTitile: '',
       selectedArticleId: '',
-      showCreateArticleModal: false
+      showCreateArticleModal: false,
+      debuggerOn: true
     }    
 
     this.updateBlotFormat = this.updateBlotFormat.bind(this)
@@ -35,6 +36,7 @@ class App extends React.Component {
     this.setArticleTitle = this.setArticleTitle.bind(this)
     this.createArticle = this.createArticle.bind(this)
     this.dataLoaded = this.dataLoaded.bind(this)
+    this.adjustBlot = this.adjustBlot.bind(this)
   }
 
   componentDidMount() {
@@ -68,21 +70,24 @@ class App extends React.Component {
     e.preventDefault()
     let aBlot = null
     let tooltipType = ''
-
+    debugger
     if (e.target.dataset.tooltip) {
+      // find a blot of a corresponding DOM node
       aBlot = Quill.find(e.target)
       tooltipType = e.target.dataset.tooltip
-    }
-    
-    if (e.target.parentNode.dataset.tooltip) {
+    } else if (e.target.parentNode.dataset.tooltip) {
+      // a hack for wrapped Tooltipable blots
       aBlot = Quill.find(e.target.parentNode)
       tooltipType = e.target.parentNode.dataset.tooltip
+    } else if (e.target.parentNode.parentNode.dataset.tooltip) {
+      aBlot = Quill.find(e.target.parentNode.parentNode)
+      tooltipType = e.target.parentNode.parentNode.dataset.tooltip
     }
-
     
-    if (aBlot && e.target.value !== '') {
-      
-      e.target.addEventListener('keypress', e => { console.log(e) })
+    // Doesn't work
+    e.target.addEventListener('keypress', e => { console.log('KEYPRESS EVENT') })
+    
+    if (aBlot && e.target.value !== '') {  
       
       this.setState({
         selectedBlot: aBlot,
@@ -108,6 +113,19 @@ class App extends React.Component {
     return (value) => {
       if (this.state.selectedBlot) {
         this.state.selectedBlot.format(name, value)
+        this.forceUpdate()
+      }
+    }
+  }
+
+  adjustBlot(blotMethodName) {
+    return (options = {}) => {
+      console.log(this.state.selectedBlot);
+      // selectedBlot
+      
+      if (this.state.selectedBlot) {
+        console.log('this.state.selectedBlot.'+blotMethodName+'('+options+')')
+        this.state.selectedBlot[blotMethodName](options)
         this.forceUpdate()
       }
     }
@@ -268,7 +286,54 @@ class App extends React.Component {
       </button>
     </div>
     <div id="editor" onClick={this.monitorsClicksOnTooltipableBlots} onKeyUp={this.keys}></div>
-
+    {/* this.state = {
+      articles: [],
+      categories: [],
+      selectedBlot: null,
+      isTooltipVisible: false,
+      tooltip: { x: 0, y: 0 },
+      tooltipType: false,
+      isToolbarVisible: true,
+      articlePreviewMode: false,
+      selectedArticleTitile: '',
+      selectedArticleId: '',
+      showCreateArticleModal: false
+    }   */}
+    { this.state.debuggerOn &&
+      <React.Fragment>
+      <table id="debugger" style={{
+        position: 'fixed',
+        left: '10px', bottom: '0',
+        zIndex: '42',
+        background: 'white'
+      }}>
+        <tr>
+          <th>selectedBlotName</th>
+          <td>{ this.state.selectedBlot ? this.state.selectedBlot.statics.blotName : this.state.selectedBlot + ''}</td>
+        </tr>
+        <tr>
+          <th>isTooltipVisible</th><td>{this.state.isTooltipVisible + ''}</td>
+        </tr>
+        <tr>
+          <th>tooltipType</th><td>{this.state.tooltipType + ''}</td>
+        </tr>
+      </table> 
+      <button onClick={e => {
+        const delta = JSON.parse(document.getElementById('setContents').value)
+        quill.setContents(delta)
+      }}>
+        Set contents
+      </button> 
+      <textarea id='setContents'></textarea>
+      <button onClick={e => {
+        const delta = JSON.stringify(quill.getContents(), null, 2)
+        document.getElementById('getContents').value = delta
+      }}>
+        Get contents
+      </button> 
+      <textarea id='getContents'></textarea>
+      </React.Fragment>
+    }
       { this.state.isTooltipVisible &&
         <ModalTooltip 
           terminator={this.tooltipTerminator} 
@@ -285,17 +350,17 @@ class App extends React.Component {
                 currentValue={this.state.selectedBlot.getFormat('alt')}/>
               <TooltipButton
                 parentListener={this.updateBlotFormat('margin')}
-                position={'LEFT'}>
+                presetValue={'LEFT'}>
                 Left
               </TooltipButton>
               <TooltipButton
                 parentListener={this.updateBlotFormat('margin')}
-                position={'CENTER'}>
+                presetValue={'CENTER'}>
                 Center
               </TooltipButton>
               <TooltipButton
                 parentListener={this.updateBlotFormat('margin')}
-                position={'RIGHT'}>
+                presetValue={'RIGHT'}>
                 Right
               </TooltipButton>
             </React.Fragment>
@@ -308,7 +373,32 @@ class App extends React.Component {
                   parentListener={this.updateBlotFormat('href') }
                   currentValue={this.state.selectedBlot.getFormat('href')}
                   type='text'/>
-              </React.Fragment> }
+              </React.Fragment> 
+            
+            ||
+            
+            this.state.tooltipType === 'table' &&
+              <React.Fragment>
+                Row
+                <TooltipButton
+                parentListener={this.adjustBlot('addRow')}>
+                  +
+                </TooltipButton>
+                <TooltipButton
+                parentListener={this.adjustBlot('removeRow')}>
+                  -
+                </TooltipButton>
+                Col
+                <TooltipButton
+                parentListener={this.adjustBlot('addColumn')}>
+                  +
+                </TooltipButton>
+                <TooltipButton
+                parentListener={this.adjustBlot('removeColumn')}>
+                  -
+                </TooltipButton>
+              </React.Fragment>
+            }
           </ModalTooltip>
         }
     </div>

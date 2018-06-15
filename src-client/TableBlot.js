@@ -15,8 +15,11 @@ class TableBlot extends React.Component {
         super(domNode)
       }
 
+      getFormat() {
+        return
+      }
+
       static create(value) {
-        
         const node = super.create()
         node.setAttribute('data-cellid', value || Date.now().toString())
         return node
@@ -63,21 +66,23 @@ class TableBlot extends React.Component {
 
       optimize(context) {
         // cell
-        debugger
-        const isCellInsideTable = 
-          this.parent.parent.statics.blotName === 'table' ? true: false
+        
+        // const isCellInsideTable = 
+        //   this.parent.parent.statics.blotName === 'table' ? true: false
 
-        if (!isCellInsideTable) return super.optimize()
+        // if (!isCellInsideTable) return super.optimize()
 
-        const parentTable = this.parent.parent
+        // const parentTable = this.parent.parent
 
-        parentTable.prev
-        parentTable.next
+        // parentTable.prev
+        // parentTable.next
+
+        super.optimize(context)
         
       }
 
       remove() {
-        debugger
+        
         if (this.prev == null && this.next == null) {
           this.parent.remove()
         } else {
@@ -86,7 +91,7 @@ class TableBlot extends React.Component {
       }
 
       replaceWith(name, value) {
-        debugger
+        
         super.replaceWith(name, value)
       }
     }
@@ -121,13 +126,13 @@ class TableBlot extends React.Component {
       }
     
       format(name, value) {
-        debugger
+        
         super.format(name, value)
       }
 
       optimize(context) {
         // row
-        debugger
+        
         if (this.next && this.next.statics.blotName === 'row' 
         && this.next.domNode.dataset.rowid === this.domNode.dataset.rowid) {
           const nextTableChildrenList = this.next.children
@@ -187,7 +192,7 @@ class TableBlot extends React.Component {
 
       replaceWith(name, value) {
         // row
-        debugger
+        
         this.parent.isolate(this.offset(this.parent), this.length())
 
         // if replacement Blot == buttonContainer
@@ -219,6 +224,7 @@ class TableBlot extends React.Component {
       static create(value) {
         let node = super.create()
         node.setAttribute('data-tableid', value || Date.now().toString())
+        node.setAttribute('data-tooltip', 'table')
         return node
       }
 
@@ -262,13 +268,54 @@ class TableBlot extends React.Component {
       }
 
       replace(target) {
-        if (target.statics.blotName === 'cell' && target.parent.statics.blotName === 'row') {
+        if (target.statics.blotName === 'cell' 
+        && target.parent.statics.blotName === 'row') {
           // Don't replace the __cell with this table
           // Replace the __cell's row instead
           super.replace(target.parent)
           return
         }
         super.replace(target)
+      }
+
+      addRow(options) {
+        debugger
+        const { columnsCount } = this.tableSize()
+        const newRow = Parchment.create(this.statics.defaultChild)
+
+        if (columnsCount === 1) return this.appendChild(newRow)
+
+        const newCells = []
+        // create enough cells
+        // 
+      }
+      
+      removeRow(options) {
+        const { rowsCount } = this.tableSize()
+
+        if (rowsCount === 1) return this.remove()
+
+        // else remove last row
+      }
+
+      addColumn(options) {
+        // this.childrens.head
+        // this.childrens.tail
+      }
+
+      removeColumn(options) {
+        const { columnsCount } = this.tableSize()
+
+        if (columnsCount === 1) return this.remove()
+
+        // else remove the last cell in each row
+      }
+
+      tableSize() {
+        return {
+          rowsCount: Number.parseInt(this.children.length),
+          columnsCount: Number.parseInt(this.children.head.children.length)
+        }
       }
     }
 
@@ -282,16 +329,18 @@ class TableBlot extends React.Component {
   }
 
   render() {
-    return <button onClick={() => { 
-      let selection = quill.getSelection()
+    return <React.Fragment>
+      <button type='button' onClick={() => { 
+        let selection = quill.getSelection()
 
-      // if (selection.length === 0) return
-        quill.insertText(selection.index + selection.length, '\n')
-        quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
-        quill.format('table', Date.now().toString())
-      }}>
-      <strong>Table</strong>
+        // if (selection.length === 0) return
+          quill.insertText(selection.index + selection.length, '\n')
+          quill.setSelection(selection.index, selection.length, Quill.sources.SILENT);
+          quill.format('table', Date.now().toString())
+        }}>
+        <strong>Table</strong>
       </button>
+    </React.Fragment>
   }
 }
 

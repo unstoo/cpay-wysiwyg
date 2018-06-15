@@ -1,8 +1,8 @@
 import React from 'react'
 
-const TooltipButton = ({parentListener, position, children}) => {
+const TooltipButton = ({parentListener, presetValue, children}) => {
   
-  return <button onClick={e => void parentListener(position)}>
+  return <button onClick={e => void parentListener(presetValue)}>
     { children }
   </button>
 }
