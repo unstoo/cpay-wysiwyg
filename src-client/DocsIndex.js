@@ -1,4 +1,5 @@
 import React from 'react'
+import DropDown from './DropDown'
 
 class DocsIndex extends React.Component {
   constructor(props) {
@@ -114,9 +115,26 @@ const Articles = ({ articles, isUnfolded, callbackWhenArticleSelected }) => {
 
   return <ul>
     {articles.map(a => <li className='article-item' key={a.article_id}>
-      <span className='chip'>
-        { a.is_published ? 'published' : 'draft' }
-      </span> 
+     
+        <DropDown initialOption={ a.is_published ? 'published' : 'draft' } notifyListener={ async(newArticleStatus) => {
+          console.log(a.article_id, newArticleStatus);
+
+          const data = { article_id: a.article_id, is_published: newArticleStatus === 'published' ? true : false }
+
+          const response = await fetch(`https://api.helpdocs.io/v1/article?key=${localStorage.k}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+
+        const { article } = await response.json()  
+        console.log(article)
+        }}>
+          {['draft', 'published']}
+        </ DropDown>
+
 
       { a.title }
 
