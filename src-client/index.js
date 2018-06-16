@@ -134,6 +134,43 @@ const quillInit = () => {
           } }
           ],
           ['table', (node, delta) => {
+
+            // Default node -> delta table parsing yield a funny looking delta.
+            // Thus custom one:
+            const cells = node.querySelectorAll('td')
+
+            const customOps = []
+
+            Array.prototype.forEach.call(cells, cell => {
+              customOps.push({
+                insert: cell.innerText
+              })
+
+              customOps.push({
+                attributes: {
+                  cell: cell.dataset.cellid,
+                  row: cell.dataset.rowid,
+                  table: cell.dataset.tableid
+                },
+                insert: '\n'
+              })
+            })
+            delta.ops = customOps
+
+
+            // This is how a cell in a row in a table delta represntation should look like:
+            // {
+            //   "insert": "Yevgeny"
+            // },
+            // {
+            //   "attributes": {
+            //     "cell": "1529145876725",
+            //     "row": "1529145873822",
+            //     "table": "1529145873814"
+            //   },
+            //   "insert": "\n"
+            // }
+
             return delta 
           }
           ]

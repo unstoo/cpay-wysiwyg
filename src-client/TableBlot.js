@@ -15,8 +15,10 @@ class TableBlot extends React.Component {
         const node = super.create()
         
         if (typeof(value) === 'undefined') {
+          debugger
           node.setAttribute('data-cellid', Date.now().toString())
         } else if (typeof(value) === 'string') {
+          debugger
           node.setAttribute('data-cellid', value)
         } else if (typeof(value) === 'object') {
           node.setAttribute('data-cellid', value.cell || Date.now().toString())
@@ -62,6 +64,8 @@ class TableBlot extends React.Component {
       }
 
       optimize(context) {
+        if (!this.domNode.dataset.rowid) this.domNode.setAttribute('data-rowid', this.parent.formats().row)
+        if (!this.domNode.dataset.tableid) this.domNode.setAttribute('data-tableid', this.parent.parent.formats().table)
         super.optimize(context)
       }
 

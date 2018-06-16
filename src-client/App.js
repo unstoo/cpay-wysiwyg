@@ -70,7 +70,6 @@ class App extends React.Component {
     e.preventDefault()
     let aBlot = null
     let tooltipType = ''
-    debugger
     if (e.target.dataset.tooltip) {
       // find a blot of a corresponding DOM node
       aBlot = Quill.find(e.target)
@@ -380,21 +379,17 @@ class App extends React.Component {
             this.state.tooltipType === 'table' &&
               <React.Fragment>
                 Row
-                <TooltipButton
-                parentListener={this.adjustBlot('addRow')}>
+                <TooltipButton parentListener={this.adjustBlot('addRow')}>
                   +
                 </TooltipButton>
-                <TooltipButton
-                parentListener={this.adjustBlot('removeRow')}>
+                <TooltipButton parentListener={this.adjustBlot('removeRow')}>
                   -
                 </TooltipButton>
                 Col
-                <TooltipButton
-                parentListener={this.adjustBlot('addColumn')}>
+                <TooltipButton parentListener={this.adjustBlot('addColumn')}>
                   +
                 </TooltipButton>
-                <TooltipButton
-                parentListener={this.adjustBlot('removeColumn')}>
+                <TooltipButton parentListener={this.adjustBlot('removeColumn')}>
                   -
                 </TooltipButton>
               </React.Fragment>
