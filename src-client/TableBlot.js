@@ -8,22 +8,35 @@ class TableBlot extends React.Component {
     let Block = Quill.import('blots/block')
     let Parchment = Quill.import('parchment')
 
+    // a drity hack to keep classes of <td> tags that were loaded from elsewhere
+    class __customCellClasses extends Block { }
+    __customCellClasses.blotName = 'customCellClasses'
+    __customCellClasses.tagName = 'td'
+    Quill.register(__customCellClasses)
+
     class __cell extends Block {
 
       // create a domNode to which a corresponding __cell blot will be attached
       static create(value) {
+
         const node = super.create()
         
         if (typeof(value) === 'undefined') {
-          debugger
+          
           node.setAttribute('data-cellid', Date.now().toString())
         } else if (typeof(value) === 'string') {
-          debugger
+          
           node.setAttribute('data-cellid', value)
         } else if (typeof(value) === 'object') {
           node.setAttribute('data-cellid', value.cell || Date.now().toString())
           node.setAttribute('data-rowid', value.row || Date.now().toString())
-          node.setAttribute('data-tableid', value.table || Date.now().toString())
+
+          let tableid = value.table
+          if (value.table.match('&')) {
+            tableid = value.table.split('&')[0]
+          }
+
+          node.setAttribute('data-tableid', tableid || Date.now().toString())
         }
 
         return node
@@ -42,10 +55,24 @@ class TableBlot extends React.Component {
       
       // Apply format to blot. Should not pass onto child or other blot.  
       format(name, value) {
-        
-        if (name === 'row' || name === 'table') {
-          this.domNode.setAttribute('data-' + name + 'id', value)
+        if (name === 'row') {
+          this.domNode.setAttribute('data-rowid', value)
         }
+
+        if (name === 'table') {
+          let tableid = value
+
+          if (value.match('&')) {
+            tableid = value.split('&')[0]
+          }
+
+          this.domNode.setAttribute('data-tableid', tableid)
+        }
+
+        if (name === 'customCellClasses') {
+          return this.domNode.classList.value += ' ' + value
+        }
+
         super.format(name, value)
       }
 
@@ -84,6 +111,7 @@ class TableBlot extends React.Component {
 
     __cell.blotName = 'cell'
     __cell.tagName = 'td'
+    __cell.className = 'table__cell'
     Quill.register(__cell)
 
     class __row extends Container {
@@ -178,6 +206,7 @@ class TableBlot extends React.Component {
     __row.scope = Parchment.Scope.BLOCK_BLOT
     __row.defaultChild = 'cell'
     __row.allowedChildren = [__cell]
+    __row.className = 'table__row'
     Quill.register(__row)
 
     class __table extends Container {
@@ -188,8 +217,17 @@ class TableBlot extends React.Component {
 
       static create(value) {
         let node = super.create()
-        node.setAttribute('data-tableid', value || Date.now().toString())
+        let tableid = value
+        let extraTableClasses = ''
+        
+        if (value.match('&')) {
+          tableid = value.split('&')[0]
+          extraTableClasses = value.split('&')[1]
+        }
+        debugger
+        node.setAttribute('data-tableid', tableid || Date.now().toString())
         node.setAttribute('data-tooltip', 'table')
+        node.classList.value += ' ' + extraTableClasses
         return node
       }
 
@@ -222,7 +260,7 @@ class TableBlot extends React.Component {
         // super.optimize ensures quill.format('table') works
         super.optimize(context)
 
-        if (this.next.statics.blotName === 'table' 
+        if (this.next && this.next.statics.blotName === 'table' 
         && this.next.domNode.dataset.tableid === this.domNode.dataset.tableid) {
           const nextTableChildrenList = this.next.children
           // append children of the next table into this table
@@ -319,8 +357,9 @@ class TableBlot extends React.Component {
     __table.scope = Parchment.Scope.BLOCK_BLOT
     __table.defaultChild = 'row'
     __table.allowedChildren = [__row]
-    __table.className = 'ql-cpay-table'
+    __table.className = 'table'
     Quill.register(__table)
+
   }
 
   render() {

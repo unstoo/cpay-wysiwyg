@@ -133,6 +133,11 @@ const quillInit = () => {
             return delta
           } }
           ],
+          ['figure', (node, delta) => { 
+            
+            return delta
+           }
+          ],
           ['table', (node, delta) => {
 
             // Default node -> delta table parsing yield a funny looking delta.
@@ -141,24 +146,32 @@ const quillInit = () => {
 
             const customOps = []
 
+            // This will properly parse only table which <td> has dataset { cellid, rowid, tableid }
+            // If not, it will messup the parsing process.
             Array.prototype.forEach.call(cells, cell => {
               customOps.push({
                 insert: cell.innerText
               })
-
+              
               customOps.push({
                 attributes: {
                   cell: cell.dataset.cellid,
                   row: cell.dataset.rowid,
-                  table: cell.dataset.tableid
+                  // a dirty hack to pass table external classes to the __table.create() method
+                  table: cell.dataset.tableid +'&'
+                    + cell.parentNode. // row
+                    parentNode. // tbody
+                    parentNode. // table
+                    classList.value,
+                    customCellClasses: cell.classList.value
                 },
                 insert: '\n'
               })
             })
+
             delta.ops = customOps
 
-
-            // This is how a cell in a row in a table delta represntation should look like:
+            // This is how a table cell delta represntation should look like:
             // {
             //   "insert": "Yevgeny"
             // },
