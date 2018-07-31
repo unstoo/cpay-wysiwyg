@@ -36,18 +36,16 @@ class DropDown extends React.Component {
         return <div style={{display: this.state.dropDownFolded ? 'none' : 'block'}} onClick={this.changeSelectedItem}>{ item }</div>
     })
     
-    return <div  style={{
-      border: '1px solid #efefef',
-      padding: '2px'
-    }}
-    onClick={() => {
-      
-      console.log(this.state.dropDownFolded);
+    return <div style={{display: 'flex', cursor: 'pointer' }} onClick={() => {
       this.setState(({ dropDownFolded }, props) => {
         return { dropDownFolded: !dropDownFolded }
       })
     }}>
-      { dropDownMenuItems }
+      <div className={this.state.dropDownFolded ? 'arrow-right' : 'arrow-down'}
+        style={{marginRight: '5px', marginTop: '6px'}}></div>
+      <div>
+        { dropDownMenuItems }
+      </div>
     </div>
   }
 }

@@ -64,9 +64,16 @@ class DocsIndex extends React.Component {
       subCategories[parent_id].push(c)
     })
 
+    const unfoldedStyle = {
+      position: 'fixed',
+      left: '0', right: '0', top: '80px', bottom: '0',
+      zIndex: '100',
+      background: 'white'
+    }
+
     return (
-      <React.Fragment>
-        <button style={{width: '100%', height: '20px'}}type='button' onClick={e => {
+      <div style={ this.state.isDocsIndexUnfolded ? unfoldedStyle : {}}>
+        <button style={{width: '100%', height: '20px'}} type='button' onClick={e => {
           this.setState((prevState, props) => {
             prevState.isDocsIndexUnfolded = !prevState.isDocsIndexUnfolded
             return prevState
@@ -104,7 +111,7 @@ class DocsIndex extends React.Component {
           </li>
         })}
       </ul>
-      </React.Fragment>
+      </div>
     )
   }
 }
@@ -148,7 +155,7 @@ const Articles = ({ articles, isUnfolded, callbackWhenArticleSelected }) => {
           quill.clipboard.dangerouslyPasteHTML(myJson.article.body)
         })
       }}>
-        <i style={{color: '#999'}} className='material-icons'>cloud_download</i>
+        <i style={{color: '#999', cursor: 'pointer'}} className='material-icons'>cloud_download</i>
       </span>
 
     </li>)}

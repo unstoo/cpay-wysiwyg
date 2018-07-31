@@ -252,6 +252,7 @@ img {
   left: -2300px;
   height: 0;
   margin-right: auto;
+  list-style-type: none;  
 }
 
 .docs-index--active {
@@ -274,4 +275,22 @@ img {
 .ql-cpay-table td {
   border: solid 1px grey;
   padding: 5px;
+}
+
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  
+  border-top: 8px solid black;
+}
+
+.arrow-right {
+  width: 0; 
+  height: 0; 
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  
+  border-left: 8px solid black;
 }

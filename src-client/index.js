@@ -5,20 +5,91 @@ import App from './App'
 import './styles.css'
 import hdocsApi from './hdocs-api'
 import Quill from './vendor/quill'
-import S3 from 'aws-sdk/clients/s3'
-window.s3 = new S3({
-    apiVersion: '2006-03-01',
-    region: 's3-eu-west-1',
-    endpoint: 'help.cryptopay.me.s3-eu-west-1.amazonaws.com',
-    params: {
-      Bucket: 'help.cryptopay.me', 
-    },
-    credentials: {
-      accessKeyId: localStorage.awsid,
-      secretAccessKey: localStorage.awssecret
-    }
-  })
 
+
+const accessKeyId = localStorage.awsid
+const secretAccessKey = localStorage.awssecret
+const region = "s3-eu-west-1"
+const bucket = 'cpay-yev'
+
+
+
+var S3 = require('aws-sdk/clients/s3')
+// var AWS = require('aws-sdk');
+// Set the region 
+
+// AWS.config.update({credentials: { accessKeyId, secretAccessKey }});
+
+// Create S3 service object
+var s3 = new S3({
+  region,
+  params: {
+    Bucket: bucket
+  },
+  apiVersion: '2006-03-01',
+  endpoint: region + '.amazonaws.com',
+  credentials: { accessKeyId, secretAccessKey }
+})
+
+window.s3 = s3
+
+
+window.listAlbums = function listAlbums() {
+  s3.listObjects({Delimiter: '/'}, function(err, data) {
+    if (err) {
+      // return alert('There was an error listing your albums: ' + err.message);
+      console.log(err)
+    } else {
+      var albums = data.CommonPrefixes.map(function(commonPrefix) {
+        var prefix = commonPrefix.Prefix;
+        var albumName = decodeURIComponent(prefix.replace('/', ''));
+        return getHtml([
+          '<li>',
+            '<span onclick="deleteAlbum(\'' + albumName + '\')">X</span>',
+            '<span onclick="viewAlbum(\'' + albumName + '\')">',
+              albumName,
+            '</span>',
+          '</li>'
+        ]);
+      });
+      var message = albums.length ?
+        getHtml([
+          '<p>Click on an album name to view it.</p>',
+          '<p>Click on the X to delete the album.</p>'
+        ]) :
+        '<p>You do not have any albums. Please Create album.';
+      var htmlTemplate = [
+        '<h2>Albums</h2>',
+        message,
+        '<ul>',
+          getHtml(albums),
+        '</ul>',
+        '<button onclick="createAlbum(prompt(\'Enter Album Name:\'))">',
+          'Create New Album',
+        '</button>'
+      ]
+      document.getElementById('app').innerHTML = getHtml(htmlTemplate);
+    }
+  });
+}
+
+// call S3 to retrieve CORS configuration for selected bucket
+
+
+
+
+// {
+//   apiVersion: '2006-03-01',
+//   region: 's3-eu-west-1',
+//   endpoint: 'help.cryptopay.me.s3-eu-west-1.amazonaws.com',
+//   params: {
+//     Bucket: 'help.cryptopay.me', 
+//   },
+//   credentials: {
+//     accessKeyId: localStorage.awsid,
+//     secretAccessKey: localStorage.awssecret
+//   }
+// }
 
 window.Quill = Quill
 window.Delta = Quill.import('delta')
@@ -117,6 +188,20 @@ var bindings = {
 }
 
 const quillInit = () => { 
+  // Set credentials and region
+  // var s3 = new S3({
+  //   apiVersion: '2006-03-01',
+  //   region,
+  //   params: {Bucket: bucket},
+  //   credentials: { accessKeyId, secretAccessKey }
+  // })
+
+  // window.s3 = s3
+  // console.log('___s3');
+  // console.log(s3);
+
+  
+
   window.quill = new Quill('#editor', {
     modules: {
       keyboard: {
